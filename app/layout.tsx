@@ -12,13 +12,10 @@ export const metadata: Metadata = {
   description: "Showcasing my projects, experience, and skills in web development.",
   icons: {
     icon: [
-      { url: '/Monkey-dev-logo.png', type: 'image/png', sizes: '32x32' },
-      { url: '/Monkey-dev-logo.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-dev.png', type: 'image/png', sizes: 'any' },
     ],
-    shortcut: '/Monkey-dev-logo.png',
-    apple: [
-      { url: '/Monkey-dev-logo.png', type: 'image/png' }
-    ]
+    shortcut: '/icon-dev.png',
+    apple: '/icon-dev.png',
   }
 };
 
