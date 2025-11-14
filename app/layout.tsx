@@ -12,10 +12,10 @@ export const metadata: Metadata = {
   description: "Showcasing my projects, experience, and skills in web development.",
   icons: {
     icon: [
-      { url: '/icon-dev.png', type: 'image/png', sizes: 'any' },
+      { url: '/icon32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-lg-192x189.png', sizes: '192x189', type: 'image/png' },
     ],
-    shortcut: '/icon-dev.png',
-    apple: '/icon-dev.png',
+    apple: '/apple-icon.png',
   }
 };
 
