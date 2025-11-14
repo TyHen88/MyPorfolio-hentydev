@@ -16,14 +16,14 @@ export default function Footer() {
 
                     {/* Social links */}
                     <div className="flex items-center gap-6">
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                        <a href="https://github.com/TyHen88" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                             GitHub
                         </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                        <a href="https://www.linkedin.com/in/ty-hen-b7799b2a4?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                             LinkedIn
                         </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                            Twitter
+                        <a href="https://t.me/ahh_tiii" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                            Telegram
                         </a>
                     </div>
 

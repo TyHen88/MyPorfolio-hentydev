@@ -5,6 +5,7 @@ import { Menu, Sun, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from './ui/mode-toggle'
 import { useTheme } from 'next-themes'
+import Image from 'next/image'
 
 const navLinks = [
     { href: '#about', label: 'About' },
@@ -26,10 +27,8 @@ export default function Navigation() {
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <a href="#" className="flex items-center gap-2 group">
-                        <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center hover-scale">
-                            <span className="text-white font-bold text-lg">{'<>'}</span>
-                        </div>
-                        <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Dev</span>
+                        <Image src="/Monkey-dev-logo.png" alt="Logo" width={40} height={40} className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center hover-scale" />
+                        <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Hen Ty's Portfolio</span>
                     </a>
 
                     {/* Desktop Navigation */}

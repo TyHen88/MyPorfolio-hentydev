@@ -91,16 +91,16 @@ export default function Contact() {
                     )}
 
                     {/* Alternative Contact Methods */}
-                    <div className="grid sm:grid-cols-3 gap-4 pt-8 border-t border-border">
+                    <div className="grid sm:grid-cols-4 gap-4 pt-8 border-t border-border">
                         <a
-                            href="mailto:hello@example.com"
+                            href="mailto:hentyn11@gmail.com"
                             className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
                         >
                             <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">Email</div>
-                            <div className="text-sm text-muted-foreground">hello@example.com</div>
+                            <div className="text-sm text-muted-foreground">hentyn11@gmail.com</div>
                         </a>
                         <a
-                            href="https://linkedin.com"
+                            href="https://www.linkedin.com/in/ty-hen-b7799b2a4?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
@@ -109,13 +109,22 @@ export default function Contact() {
                             <div className="text-sm text-muted-foreground">Connect with me</div>
                         </a>
                         <a
-                            href="https://github.com"
+                            href="https://github.com/TyHen88"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
                         >
                             <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">GitHub</div>
                             <div className="text-sm text-muted-foreground">View my projects</div>
+                        </a>
+                        <a
+                            href="https://t.me/ahh_tiii"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
+                        >
+                            <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">Telegram</div>
+                            <div className="text-sm text-muted-foreground">Chat with me</div>
                         </a>
                     </div>
                 </div>
