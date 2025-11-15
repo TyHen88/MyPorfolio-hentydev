@@ -42,7 +42,7 @@ export default function AiAssistant() {
     const [isLoading, setIsLoading] = useState(false)
     const [sessionId, setSessionId] = useState<string>(`session-${Date.now()}`)
     const messagesEndRef = useRef<HTMLDivElement>(null)
-    const inputRef = useRef<HTMLInputElement>(null)
+    const inputRef = useRef<HTMLTextAreaElement>(null)
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -57,6 +57,14 @@ export default function AiAssistant() {
             setTimeout(() => inputRef.current?.focus(), 100)
         }
     }, [open])
+
+    useEffect(() => {
+        // Auto-resize textarea
+        if (inputRef.current) {
+            inputRef.current.style.height = 'auto'
+            inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 128)}px`
+        }
+    }, [input])
 
 
     const handleSend = async (query?: string) => {
@@ -73,6 +81,10 @@ export default function AiAssistant() {
         setMessages(prev => [...prev, userMessage])
         if (!query) {
             setInput('')
+            // Reset textarea height
+            if (inputRef.current) {
+                inputRef.current.style.height = 'auto'
+            }
         }
         setIsLoading(true)
 
@@ -297,7 +309,7 @@ export default function AiAssistant() {
             <Drawer open={open} onOpenChange={setOpen} direction="right">
                 <DrawerTrigger asChild>
                     <button
-                        className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full transition-all duration-500 hover:scale-110 active:scale-95 group cursor-pointer border-0 outline-none focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:ring-offset-2 focus:ring-offset-background"
+                        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 h-12 w-12 sm:h-14 sm:w-14 rounded-full transition-all duration-500 hover:scale-110 active:scale-95 group cursor-pointer border-0 outline-none focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:ring-offset-2 focus:ring-offset-background"
                         aria-label="Open AI Assistant"
                         style={{
                             animation: 'float 3s ease-in-out infinite'
@@ -318,7 +330,7 @@ export default function AiAssistant() {
                             <div className="absolute inset-0">
                                 {/* Large sparkle - left of center */}
                                 <Sparkles
-                                    className="absolute h-4 w-4 text-white left-[35%] top-[45%] drop-shadow-lg"
+                                    className="absolute h-3 w-3 sm:h-4 sm:w-4 text-white left-[35%] top-[45%] drop-shadow-lg"
                                     style={{
                                         animation: 'sparkle 2s ease-in-out infinite',
                                         animationDelay: '0s'
@@ -326,7 +338,7 @@ export default function AiAssistant() {
                                 />
                                 {/* Medium sparkle - above and right */}
                                 <Sparkles
-                                    className="absolute h-3.5 w-3.5 text-white left-[50%] top-[30%] drop-shadow-lg"
+                                    className="absolute h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 text-white left-[50%] top-[30%] drop-shadow-lg"
                                     style={{
                                         animation: 'sparkle 2.5s ease-in-out infinite',
                                         animationDelay: '0.7s'
@@ -334,7 +346,7 @@ export default function AiAssistant() {
                                 />
                                 {/* Small sparkle - below and right */}
                                 <Sparkles
-                                    className="absolute h-3 w-3 text-white left-[55%] top-[60%] drop-shadow-lg"
+                                    className="absolute h-2.5 w-2.5 sm:h-3 sm:w-3 text-white left-[55%] top-[60%] drop-shadow-lg"
                                     style={{
                                         animation: 'sparkle 2.2s ease-in-out infinite',
                                         animationDelay: '1.4s'
@@ -356,23 +368,23 @@ export default function AiAssistant() {
                         <div className="absolute inset-0 rounded-full border border-white/10 group-hover:border-white/20 transition-all duration-500 -z-10" />
                     </button>
                 </DrawerTrigger>
-                <DrawerContent side="right" className="h-full">
-                    <DrawerHeader className="border-b">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+                <DrawerContent side="right" className="h-full w-full sm:max-w-lg">
+                    <DrawerHeader className="border-b p-3 sm:p-4">
+                        <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                                     <Image
                                         src="/Monkey-dev-logo.png"
                                         alt="Monkey Dev AI Assistant"
                                         width={32}
                                         height={32}
-                                        className="object-contain"
+                                        className="object-contain w-6 h-6 sm:w-8 sm:h-8"
                                         priority
                                     />
                                 </div>
-                                <div>
-                                    <DrawerTitle>AI Portfolio Assistant</DrawerTitle>
-                                    <DrawerDescription>
+                                <div className="min-w-0 flex-1">
+                                    <DrawerTitle className="text-base sm:text-lg truncate">AI Portfolio Assistant</DrawerTitle>
+                                    <DrawerDescription className="text-xs sm:text-sm truncate">
                                         Ask me anything about this portfolio
                                     </DrawerDescription>
                                 </div>
@@ -381,91 +393,101 @@ export default function AiAssistant() {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setOpen(false)}
-                                className="h-8 w-8"
+                                className="h-8 w-8 sm:h-8 sm:w-8 flex-shrink-0"
                             >
                                 <X className="h-4 w-4" />
                             </Button>
                         </div>
                     </DrawerHeader>
 
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                        {messages.map((message) => (
-                            <div
-                                key={message.id}
-                                className={cn(
-                                    "flex gap-3",
-                                    message.role === 'user' ? 'justify-end' : 'justify-start'
-                                )}
-                            >
-                                {message.role === 'assistant' && (
-                                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                                        <Image
-                                            src="/Monkey-dev-logo.png"
-                                            alt="AI Assistant"
-                                            width={24}
-                                            height={24}
-                                            className="object-contain"
-                                        />
-                                    </div>
-                                )}
+                    <div className="flex-1 overflow-y-auto">
+                        <div className="max-w-3xl mx-auto w-full">
+                            {messages.map((message, index) => (
                                 <div
+                                    key={message.id}
                                     className={cn(
-                                        "rounded-lg px-4 py-3 max-w-[85%] shadow-sm",
+                                        "group w-full",
                                         message.role === 'user'
-                                            ? 'bg-primary text-primary-foreground'
-                                            : 'bg-muted text-foreground border border-border/50'
+                                            ? 'bg-muted/30 dark:bg-muted/20'
+                                            : 'bg-background'
                                     )}
                                 >
-                                    <div className="break-words prose prose-sm dark:prose-invert max-w-none">
-                                        {message.role === 'assistant' ? formatMessage(message.content) : (
-                                            <p className="whitespace-pre-wrap m-0">{message.content}</p>
+                                    <div className={cn(
+                                        "flex gap-3 sm:gap-4 px-3 sm:px-4 md:px-6 py-4 sm:py-5",
+                                        message.role === 'user' ? 'justify-end' : 'justify-start'
+                                    )}>
+                                        {message.role === 'assistant' && (
+                                            <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden mt-0.5">
+                                                <Image
+                                                    src="/Monkey-dev-logo.png"
+                                                    alt="AI Assistant"
+                                                    width={32}
+                                                    height={32}
+                                                    className="object-contain w-6 h-6 sm:w-7 sm:h-7"
+                                                />
+                                            </div>
+                                        )}
+                                        <div className={cn(
+                                            "flex-1 min-w-0",
+                                            message.role === 'user' ? 'flex justify-end' : ''
+                                        )}>
+                                            <div className={cn(
+                                                "inline-block max-w-full",
+                                                message.role === 'user'
+                                                    ? 'bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-2.5 sm:px-5 sm:py-3'
+                                                    : 'bg-muted/50 dark:bg-muted/30 text-foreground rounded-2xl rounded-tl-sm px-4 py-2.5 sm:px-5 sm:py-3 border border-border/30'
+                                            )}>
+                                                <div className="break-words prose prose-sm dark:prose-invert max-w-none text-[15px] sm:text-base leading-relaxed">
+                                                    {message.role === 'assistant' ? formatMessage(message.content) : (
+                                                        <p className="whitespace-pre-wrap m-0 leading-relaxed">{message.content}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {message.role === 'user' && (
+                                            <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                <span className="text-sm sm:text-base font-semibold text-primary-foreground">U</span>
+                                            </div>
                                         )}
                                     </div>
-                                    <div className={cn(
-                                        "text-xs mt-2 pt-2 border-t",
-                                        message.role === 'user'
-                                            ? 'border-primary-foreground/20 text-primary-foreground/70'
-                                            : 'border-border/30 text-muted-foreground'
-                                    )}>
-                                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </div>
                                 </div>
-                                {message.role === 'user' && (
-                                    <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                                        <span className="text-sm font-semibold text-primary-foreground">U</span>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                            ))}
+                        </div>
 
                         {isLoading && (
-                            <div className="flex gap-3 justify-start">
-                                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                                    <Image
-                                        src="/Monkey-dev-logo.png"
-                                        alt="AI Assistant"
-                                        width={24}
-                                        height={24}
-                                        className="object-contain"
-                                    />
-                                </div>
-                                <div className="rounded-lg px-4 py-2 bg-muted">
-                                    <Loader2 className="h-4 w-4 animate-spin" />
+                            <div className="bg-background">
+                                <div className="max-w-3xl mx-auto w-full">
+                                    <div className="flex gap-3 sm:gap-4 px-3 sm:px-4 md:px-6 py-4 sm:py-5 justify-start">
+                                        <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden mt-0.5">
+                                            <Image
+                                                src="/Monkey-dev-logo.png"
+                                                alt="AI Assistant"
+                                                width={32}
+                                                height={32}
+                                                className="object-contain w-6 h-6 sm:w-7 sm:h-7"
+                                            />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="inline-block bg-muted/50 dark:bg-muted/30 rounded-2xl rounded-tl-sm px-4 py-2.5 sm:px-5 sm:py-3 border border-border/30">
+                                                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}
 
                         {messages.length === 1 && (
-                            <div className="space-y-2 mt-4">
-                                <p className="text-sm text-muted-foreground mb-3">Try asking:</p>
-                                <div className="flex flex-wrap gap-2">
+                            <div className="max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-6 py-4 sm:py-6">
+                                <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 font-medium">Try asking:</p>
+                                <div className="flex flex-wrap gap-2 sm:gap-3">
                                     {SUGGESTED_QUESTIONS.map((question, index) => (
                                         <Button
                                             key={index}
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleSuggestedQuestion(question)}
-                                            className="text-xs"
+                                            className="text-xs sm:text-sm px-3 sm:px-4 py-2 h-auto rounded-full hover:bg-muted transition-colors"
                                         >
                                             {question}
                                         </Button>
@@ -477,34 +499,49 @@ export default function AiAssistant() {
                         <div ref={messagesEndRef} />
                     </div>
 
-                    <div className="border-t p-4">
-                        <div className="flex gap-2">
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault()
-                                        handleSend()
-                                    }
-                                }}
-                                placeholder="Ask about experience, skills, projects..."
-                                className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                disabled={isLoading}
-                            />
-                            <Button
-                                onClick={() => handleSend()}
-                                disabled={!input.trim() || isLoading}
-                                size="icon"
-                            >
-                                {isLoading ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Send className="h-4 w-4" />
-                                )}
-                            </Button>
+                    <div className="border-t bg-background">
+                        <div className="max-w-3xl mx-auto w-full p-3 sm:p-4 md:p-6">
+                            <div className="flex gap-2 sm:gap-3 items-end">
+                                <div className="flex-1 relative">
+                                    <textarea
+                                        ref={inputRef}
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                                e.preventDefault()
+                                                handleSend()
+                                            }
+                                        }}
+                                        placeholder="Message AI Assistant..."
+                                        rows={1}
+                                        className="w-full resize-none rounded-2xl border border-input bg-background px-4 py-3 sm:px-5 sm:py-3.5 text-sm sm:text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-h-32 overflow-y-auto"
+                                        disabled={isLoading}
+                                        style={{
+                                            minHeight: '48px',
+                                            height: 'auto',
+                                        }}
+                                        onInput={(e) => {
+                                            const target = e.target as HTMLTextAreaElement
+                                            target.style.height = 'auto'
+                                            target.style.height = `${Math.min(target.scrollHeight, 128)}px`
+                                        }}
+                                    />
+                                </div>
+                                <Button
+                                    onClick={() => handleSend()}
+                                    disabled={!input.trim() || isLoading}
+                                    size="icon"
+                                    className="h-12 w-12 flex-shrink-0 rounded-full bg-primary hover:bg-primary/90 transition-colors self-end"
+                                    style={{ minHeight: '48px' }}
+                                >
+                                    {isLoading ? (
+                                        <Loader2 className="h-5 w-5 animate-spin" />
+                                    ) : (
+                                        <Send className="h-5 w-5" />
+                                    )}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </DrawerContent>

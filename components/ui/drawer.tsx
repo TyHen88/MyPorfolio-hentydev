@@ -53,8 +53,8 @@ const DrawerContent = React.forwardRef<
         ref={ref}
         className={cn(
           "fixed z-50 flex flex-col border bg-background",
-          isRight && "inset-y-0 right-0 h-full w-full max-w-lg rounded-l-[10px]",
-          isLeft && "inset-y-0 left-0 h-full w-full max-w-lg rounded-r-[10px]",
+          isRight && "inset-y-0 right-0 h-full w-full sm:max-w-lg rounded-l-[10px]",
+          isLeft && "inset-y-0 left-0 h-full w-full sm:max-w-lg rounded-r-[10px]",
           isTop && "inset-x-0 top-0 h-auto max-h-[85vh] rounded-b-[10px]",
           !isRight && !isLeft && !isTop && "inset-x-0 bottom-0 h-auto max-h-[85vh] rounded-t-[10px]",
           className
