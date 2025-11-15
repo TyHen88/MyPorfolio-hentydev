@@ -41,8 +41,10 @@ export default function AiAssistant() {
     const [input, setInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [sessionId, setSessionId] = useState<string>(`session-${Date.now()}`)
+    const [keyboardHeight, setKeyboardHeight] = useState(0)
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLTextAreaElement>(null)
+    const inputContainerRef = useRef<HTMLDivElement>(null)
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -61,10 +63,79 @@ export default function AiAssistant() {
     useEffect(() => {
         // Auto-resize textarea
         if (inputRef.current) {
-            inputRef.current.style.height = 'auto'
+            inputRef.current.style.height = '40px'
             inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 128)}px`
         }
     }, [input])
+
+    // Handle mobile keyboard visibility
+    useEffect(() => {
+        if (!open) {
+            setKeyboardHeight(0)
+            return
+        }
+
+        let initialViewportHeight = window.innerHeight
+
+        const handleResize = () => {
+            if (typeof window !== 'undefined') {
+                const currentHeight = window.innerHeight
+                const heightDiff = initialViewportHeight - currentHeight
+
+                // If viewport shrunk significantly, keyboard is likely open
+                if (heightDiff > 100) {
+                    setKeyboardHeight(heightDiff)
+                    // Scroll to bottom when keyboard appears
+                    setTimeout(() => {
+                        scrollToBottom()
+                    }, 150)
+                } else {
+                    setKeyboardHeight(0)
+                }
+            }
+        }
+
+        const handleViewportResize = () => {
+            if (typeof window !== 'undefined' && window.visualViewport) {
+                const viewport = window.visualViewport
+                const windowHeight = window.innerHeight
+                const viewportHeight = viewport.height
+                const heightDiff = windowHeight - viewportHeight
+
+                // If viewport is significantly smaller, keyboard is likely open
+                if (heightDiff > 100) {
+                    setKeyboardHeight(heightDiff)
+                    // Scroll to bottom when keyboard appears
+                    setTimeout(() => {
+                        scrollToBottom()
+                    }, 150)
+                } else {
+                    setKeyboardHeight(0)
+                }
+            }
+        }
+
+        // Use visual viewport API if available (mobile browsers)
+        if (typeof window !== 'undefined' && window.visualViewport) {
+            window.visualViewport.addEventListener('resize', handleViewportResize)
+            window.visualViewport.addEventListener('scroll', handleViewportResize)
+        }
+
+        // Fallback for browsers without visual viewport API
+        window.addEventListener('resize', handleResize)
+
+        // Update initial height when drawer opens
+        initialViewportHeight = window.innerHeight
+
+        return () => {
+            if (typeof window !== 'undefined' && window.visualViewport) {
+                window.visualViewport.removeEventListener('resize', handleViewportResize)
+                window.visualViewport.removeEventListener('scroll', handleViewportResize)
+            }
+            window.removeEventListener('resize', handleResize)
+            setKeyboardHeight(0)
+        }
+    }, [open])
 
 
     const handleSend = async (query?: string) => {
@@ -83,7 +154,7 @@ export default function AiAssistant() {
             setInput('')
             // Reset textarea height
             if (inputRef.current) {
-                inputRef.current.style.height = 'auto'
+                inputRef.current.style.height = '40px'
             }
         }
         setIsLoading(true)
@@ -369,22 +440,22 @@ export default function AiAssistant() {
                     </button>
                 </DrawerTrigger>
                 <DrawerContent side="right" className="h-full w-full sm:max-w-lg">
-                    <DrawerHeader className="border-b p-3 sm:p-4">
+                    <DrawerHeader className="border-b p-2.5 sm:p-4">
                         <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                <div className="h-7 w-7 sm:h-10 sm:w-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                                     <Image
                                         src="/Monkey-dev-logo.png"
                                         alt="Monkey Dev AI Assistant"
                                         width={32}
                                         height={32}
-                                        className="object-contain w-6 h-6 sm:w-8 sm:h-8"
+                                        className="object-contain w-5 h-5 sm:w-8 sm:h-8"
                                         priority
                                     />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <DrawerTitle className="text-base sm:text-lg truncate">AI Portfolio Assistant</DrawerTitle>
-                                    <DrawerDescription className="text-xs sm:text-sm truncate">
+                                    <DrawerTitle className="text-sm sm:text-lg truncate">AI Assistant</DrawerTitle>
+                                    <DrawerDescription className="text-[10px] sm:text-sm truncate hidden sm:block">
                                         Ask me anything about this portfolio
                                     </DrawerDescription>
                                 </div>
@@ -393,37 +464,32 @@ export default function AiAssistant() {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setOpen(false)}
-                                className="h-8 w-8 sm:h-8 sm:w-8 flex-shrink-0"
+                                className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0"
                             >
-                                <X className="h-4 w-4" />
+                                <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                             </Button>
                         </div>
                     </DrawerHeader>
 
                     <div className="flex-1 overflow-y-auto">
-                        <div className="max-w-3xl mx-auto w-full">
+                        <div className="w-full">
                             {messages.map((message, index) => (
                                 <div
                                     key={message.id}
-                                    className={cn(
-                                        "group w-full",
-                                        message.role === 'user'
-                                            ? 'bg-muted/30 dark:bg-muted/20'
-                                            : 'bg-background'
-                                    )}
+                                    className="group w-full bg-background"
                                 >
                                     <div className={cn(
-                                        "flex gap-3 sm:gap-4 px-3 sm:px-4 md:px-6 py-4 sm:py-5",
+                                        "flex gap-2 sm:gap-4 px-2 sm:px-4 md:px-6 py-2.5 sm:py-5",
                                         message.role === 'user' ? 'justify-end' : 'justify-start'
                                     )}>
                                         {message.role === 'assistant' && (
-                                            <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden mt-0.5">
+                                            <div className="h-6 w-6 sm:h-9 sm:w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden mt-0.5">
                                                 <Image
                                                     src="/Monkey-dev-logo.png"
                                                     alt="AI Assistant"
                                                     width={32}
                                                     height={32}
-                                                    className="object-contain w-6 h-6 sm:w-7 sm:h-7"
+                                                    className="object-contain w-4 h-4 sm:w-7 sm:h-7"
                                                 />
                                             </div>
                                         )}
@@ -432,21 +498,29 @@ export default function AiAssistant() {
                                             message.role === 'user' ? 'flex justify-end' : ''
                                         )}>
                                             <div className={cn(
-                                                "inline-block max-w-full",
+                                                "inline-block max-w-[85%] sm:max-w-full",
                                                 message.role === 'user'
-                                                    ? 'bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-2.5 sm:px-5 sm:py-3'
-                                                    : 'bg-muted/50 dark:bg-muted/30 text-foreground rounded-2xl rounded-tl-sm px-4 py-2.5 sm:px-5 sm:py-3 border border-border/30'
+                                                    ? 'bg-primary text-primary-foreground rounded-xl sm:rounded-2xl rounded-tr-sm px-3 py-2 sm:px-5 sm:py-3'
+                                                    : 'bg-muted/50 dark:bg-muted/30 text-foreground rounded-xl sm:rounded-2xl rounded-tl-sm px-3 py-2 sm:px-5 sm:py-3 border border-border/30'
                                             )}>
-                                                <div className="break-words prose prose-sm dark:prose-invert max-w-none text-[15px] sm:text-base leading-relaxed">
+                                                <div className="break-words prose prose-sm dark:prose-invert max-w-none text-sm sm:text-base leading-relaxed">
                                                     {message.role === 'assistant' ? formatMessage(message.content) : (
-                                                        <p className="whitespace-pre-wrap m-0 leading-relaxed">{message.content}</p>
+                                                        <p className="whitespace-pre-wrap m-0 leading-relaxed text-sm sm:text-base">{message.content}</p>
                                                     )}
+                                                </div>
+                                                <div className={cn(
+                                                    "text-[10px] sm:text-xs mt-1.5 sm:mt-2 pt-1.5 sm:pt-2 border-t",
+                                                    message.role === 'user'
+                                                        ? 'border-primary-foreground/20 text-primary-foreground/70'
+                                                        : 'border-border/30 text-muted-foreground'
+                                                )}>
+                                                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                 </div>
                                             </div>
                                         </div>
                                         {message.role === 'user' && (
-                                            <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5">
-                                                <span className="text-sm sm:text-base font-semibold text-primary-foreground">U</span>
+                                            <div className="h-6 w-6 sm:h-9 sm:w-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                <span className="text-xs sm:text-base font-semibold text-primary-foreground">U</span>
                                             </div>
                                         )}
                                     </div>
@@ -456,20 +530,20 @@ export default function AiAssistant() {
 
                         {isLoading && (
                             <div className="bg-background">
-                                <div className="max-w-3xl mx-auto w-full">
-                                    <div className="flex gap-3 sm:gap-4 px-3 sm:px-4 md:px-6 py-4 sm:py-5 justify-start">
-                                        <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden mt-0.5">
+                                <div className="w-full">
+                                    <div className="flex gap-2 sm:gap-4 px-2 sm:px-4 md:px-6 py-2.5 sm:py-5 justify-start">
+                                        <div className="h-6 w-6 sm:h-9 sm:w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden mt-0.5">
                                             <Image
                                                 src="/Monkey-dev-logo.png"
                                                 alt="AI Assistant"
                                                 width={32}
                                                 height={32}
-                                                className="object-contain w-6 h-6 sm:w-7 sm:h-7"
+                                                className="object-contain w-4 h-4 sm:w-7 sm:h-7"
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="inline-block bg-muted/50 dark:bg-muted/30 rounded-2xl rounded-tl-sm px-4 py-2.5 sm:px-5 sm:py-3 border border-border/30">
-                                                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                                            <div className="inline-block bg-muted/50 dark:bg-muted/30 rounded-xl sm:rounded-2xl rounded-tl-sm px-3 py-2 sm:px-5 sm:py-3 border border-border/30">
+                                                <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin text-muted-foreground" />
                                             </div>
                                         </div>
                                     </div>
@@ -478,16 +552,16 @@ export default function AiAssistant() {
                         )}
 
                         {messages.length === 1 && (
-                            <div className="max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-6 py-4 sm:py-6">
-                                <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 font-medium">Try asking:</p>
-                                <div className="flex flex-wrap gap-2 sm:gap-3">
+                            <div className="w-full px-2 sm:px-4 md:px-6 py-3 sm:py-6">
+                                <p className="text-xs sm:text-base text-muted-foreground mb-2 sm:mb-4 font-medium">Try asking:</p>
+                                <div className="flex flex-wrap gap-1.5 sm:gap-3">
                                     {SUGGESTED_QUESTIONS.map((question, index) => (
                                         <Button
                                             key={index}
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleSuggestedQuestion(question)}
-                                            className="text-xs sm:text-sm px-3 sm:px-4 py-2 h-auto rounded-full hover:bg-muted transition-colors"
+                                            className="text-[10px] sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 h-auto rounded-full hover:bg-muted transition-colors"
                                         >
                                             {question}
                                         </Button>
@@ -499,10 +573,21 @@ export default function AiAssistant() {
                         <div ref={messagesEndRef} />
                     </div>
 
-                    <div className="border-t bg-background">
-                        <div className="max-w-3xl mx-auto w-full p-3 sm:p-4 md:p-6">
-                            <div className="flex gap-2 sm:gap-3 items-end">
-                                <div className="flex-1 relative">
+                    <div
+                        ref={inputContainerRef}
+                        className="border-t bg-background transition-all duration-200 ease-out"
+                        style={{
+                            position: keyboardHeight > 0 ? 'fixed' : 'relative',
+                            bottom: keyboardHeight > 0 ? `${keyboardHeight}px` : '0',
+                            left: keyboardHeight > 0 ? '0' : 'auto',
+                            right: keyboardHeight > 0 ? '0' : 'auto',
+                            width: keyboardHeight > 0 ? '100%' : 'auto',
+                            zIndex: keyboardHeight > 0 ? 50 : 'auto',
+                        }}
+                    >
+                        <div className="w-full p-2 sm:p-4 md:p-6">
+                            <div className="flex gap-1.5 sm:gap-3 items-end">
+                                <div className="flex-1 relative flex items-end">
                                     <textarea
                                         ref={inputRef}
                                         value={input}
@@ -513,17 +598,23 @@ export default function AiAssistant() {
                                                 handleSend()
                                             }
                                         }}
-                                        placeholder="Message AI Assistant..."
+                                        onFocus={() => {
+                                            // Scroll to bottom when input is focused
+                                            setTimeout(() => {
+                                                scrollToBottom()
+                                            }, 300)
+                                        }}
+                                        placeholder="Message..."
                                         rows={1}
-                                        className="w-full resize-none rounded-2xl border border-input bg-background px-4 py-3 sm:px-5 sm:py-3.5 text-sm sm:text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-h-32 overflow-y-auto"
+                                        className="w-full resize-none rounded-xl sm:rounded-2xl border border-input bg-background px-3 py-2 sm:px-5 sm:py-3.5 text-sm sm:text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-h-32 overflow-y-auto"
                                         disabled={isLoading}
                                         style={{
-                                            minHeight: '48px',
+                                            minHeight: '40px',
                                             height: 'auto',
                                         }}
                                         onInput={(e) => {
                                             const target = e.target as HTMLTextAreaElement
-                                            target.style.height = 'auto'
+                                            target.style.height = '40px'
                                             target.style.height = `${Math.min(target.scrollHeight, 128)}px`
                                         }}
                                     />
@@ -532,18 +623,24 @@ export default function AiAssistant() {
                                     onClick={() => handleSend()}
                                     disabled={!input.trim() || isLoading}
                                     size="icon"
-                                    className="h-12 w-12 flex-shrink-0 rounded-full bg-primary hover:bg-primary/90 transition-colors self-end"
-                                    style={{ minHeight: '48px' }}
+                                    className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 rounded-full bg-primary hover:bg-primary/90 transition-colors"
+                                    style={{
+                                        minHeight: '40px',
+                                        flexShrink: 0,
+                                    }}
                                 >
                                     {isLoading ? (
-                                        <Loader2 className="h-5 w-5 animate-spin" />
+                                        <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
                                     ) : (
-                                        <Send className="h-5 w-5" />
+                                        <Send className="h-4 w-4 sm:h-5 sm:w-5" />
                                     )}
                                 </Button>
                             </div>
                         </div>
                     </div>
+                    {keyboardHeight > 0 && (
+                        <div style={{ height: `${inputContainerRef.current?.offsetHeight || 80}px` }} />
+                    )}
                 </DrawerContent>
             </Drawer>
         </>
