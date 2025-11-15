@@ -12,6 +12,7 @@ import Research from '@/components/research'
 import BestPractices from '@/components/best-practices'
 import Contact from '@/components/contact'
 import Footer from '@/components/footer'
+import AiAssistant from '@/components/ai-assistant/AiAssistant'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -35,6 +36,7 @@ export default function Home() {
       <BestPractices />
       <Contact />
       <Footer />
+      <AiAssistant />
     </main>
   )
 }
