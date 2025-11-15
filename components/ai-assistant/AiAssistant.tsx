@@ -63,7 +63,7 @@ export default function AiAssistant() {
     useEffect(() => {
         // Auto-resize textarea
         if (inputRef.current) {
-            inputRef.current.style.height = '40px'
+            inputRef.current.style.height = '44px'
             inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 128)}px`
         }
     }, [input])
@@ -154,7 +154,7 @@ export default function AiAssistant() {
             setInput('')
             // Reset textarea height
             if (inputRef.current) {
-                inputRef.current.style.height = '40px'
+                inputRef.current.style.height = '44px'
             }
         }
         setIsLoading(true)
@@ -575,7 +575,7 @@ export default function AiAssistant() {
 
                     <div
                         ref={inputContainerRef}
-                        className="border-t bg-background transition-all duration-200 ease-out"
+                        className="border-t bg-background/95 backdrop-blur-sm transition-all duration-200 ease-out safe-area-inset-bottom"
                         style={{
                             position: keyboardHeight > 0 ? 'fixed' : 'relative',
                             bottom: keyboardHeight > 0 ? `${keyboardHeight}px` : '0',
@@ -583,11 +583,12 @@ export default function AiAssistant() {
                             right: keyboardHeight > 0 ? '0' : 'auto',
                             width: keyboardHeight > 0 ? '100%' : 'auto',
                             zIndex: keyboardHeight > 0 ? 50 : 'auto',
+                            paddingBottom: keyboardHeight > 0 ? 'env(safe-area-inset-bottom)' : '0',
                         }}
                     >
-                        <div className="w-full p-2 sm:p-4 md:p-6">
-                            <div className="flex gap-1.5 sm:gap-3 items-end">
-                                <div className="flex-1 relative flex items-end">
+                        <div className="w-full p-2.5 sm:p-4 md:p-6">
+                            <div className="flex gap-2 sm:gap-3 items-end">
+                                <div className="flex-1 relative">
                                     <textarea
                                         ref={inputRef}
                                         value={input}
@@ -606,15 +607,15 @@ export default function AiAssistant() {
                                         }}
                                         placeholder="Message..."
                                         rows={1}
-                                        className="w-full resize-none rounded-xl sm:rounded-2xl border border-input bg-background px-3 py-2 sm:px-5 sm:py-3.5 text-sm sm:text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-h-32 overflow-y-auto"
+                                        className="w-full resize-none rounded-2xl border border-input/50 bg-background/95 backdrop-blur-sm px-4 py-2.5 sm:px-5 sm:py-3.5 text-sm sm:text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-h-32 overflow-y-auto shadow-sm"
                                         disabled={isLoading}
                                         style={{
-                                            minHeight: '40px',
+                                            minHeight: '44px',
                                             height: 'auto',
                                         }}
                                         onInput={(e) => {
                                             const target = e.target as HTMLTextAreaElement
-                                            target.style.height = '40px'
+                                            target.style.height = '44px'
                                             target.style.height = `${Math.min(target.scrollHeight, 128)}px`
                                         }}
                                     />
@@ -623,9 +624,9 @@ export default function AiAssistant() {
                                     onClick={() => handleSend()}
                                     disabled={!input.trim() || isLoading}
                                     size="icon"
-                                    className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 rounded-full bg-primary hover:bg-primary/90 transition-colors"
+                                    className="h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 rounded-full bg-primary hover:bg-primary/90 active:bg-primary/80 transition-colors shadow-md"
                                     style={{
-                                        minHeight: '40px',
+                                        minHeight: '44px',
                                         flexShrink: 0,
                                     }}
                                 >
