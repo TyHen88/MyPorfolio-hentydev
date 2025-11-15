@@ -42,6 +42,7 @@ export default function AiAssistant() {
     const [isLoading, setIsLoading] = useState(false)
     const [sessionId, setSessionId] = useState<string>(`session-${Date.now()}`)
     const [keyboardHeight, setKeyboardHeight] = useState(0)
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLTextAreaElement>(null)
     const inputContainerRef = useRef<HTMLDivElement>(null)
@@ -72,27 +73,8 @@ export default function AiAssistant() {
     useEffect(() => {
         if (!open) {
             setKeyboardHeight(0)
+            setIsKeyboardOpen(false)
             return
-        }
-
-        let initialViewportHeight = window.innerHeight
-
-        const handleResize = () => {
-            if (typeof window !== 'undefined') {
-                const currentHeight = window.innerHeight
-                const heightDiff = initialViewportHeight - currentHeight
-
-                // If viewport shrunk significantly, keyboard is likely open
-                if (heightDiff > 100) {
-                    setKeyboardHeight(heightDiff)
-                    // Scroll to bottom when keyboard appears
-                    setTimeout(() => {
-                        scrollToBottom()
-                    }, 150)
-                } else {
-                    setKeyboardHeight(0)
-                }
-            }
         }
 
         const handleViewportResize = () => {
@@ -103,13 +85,31 @@ export default function AiAssistant() {
                 const heightDiff = windowHeight - viewportHeight
 
                 // If viewport is significantly smaller, keyboard is likely open
-                if (heightDiff > 100) {
+                if (heightDiff > 150) {
+                    setIsKeyboardOpen(true)
+                    // Position input at the bottom of visual viewport (above keyboard)
+                    // The keyboard height is the difference between window and viewport height
                     setKeyboardHeight(heightDiff)
+
                     // Scroll to bottom when keyboard appears
                     setTimeout(() => {
                         scrollToBottom()
-                    }, 150)
+                    }, 200)
                 } else {
+                    setIsKeyboardOpen(false)
+                    setKeyboardHeight(0)
+                }
+            }
+        }
+
+        const handleResize = () => {
+            if (typeof window !== 'undefined') {
+                const isMobile = window.innerWidth < 768
+
+                if (isMobile && window.visualViewport) {
+                    handleViewportResize()
+                } else {
+                    setIsKeyboardOpen(false)
                     setKeyboardHeight(0)
                 }
             }
@@ -119,13 +119,12 @@ export default function AiAssistant() {
         if (typeof window !== 'undefined' && window.visualViewport) {
             window.visualViewport.addEventListener('resize', handleViewportResize)
             window.visualViewport.addEventListener('scroll', handleViewportResize)
+            // Initial check
+            handleViewportResize()
         }
 
         // Fallback for browsers without visual viewport API
         window.addEventListener('resize', handleResize)
-
-        // Update initial height when drawer opens
-        initialViewportHeight = window.innerHeight
 
         return () => {
             if (typeof window !== 'undefined' && window.visualViewport) {
@@ -134,6 +133,7 @@ export default function AiAssistant() {
             }
             window.removeEventListener('resize', handleResize)
             setKeyboardHeight(0)
+            setIsKeyboardOpen(false)
         }
     }, [open])
 
@@ -575,20 +575,20 @@ export default function AiAssistant() {
 
                     <div
                         ref={inputContainerRef}
-                        className="border-t bg-background/95 backdrop-blur-sm transition-all duration-200 ease-out safe-area-inset-bottom"
+                        className="border-t bg-background/95 backdrop-blur-sm transition-all duration-200 ease-out"
                         style={{
-                            position: keyboardHeight > 0 ? 'fixed' : 'relative',
-                            bottom: keyboardHeight > 0 ? `${keyboardHeight}px` : '0',
-                            left: keyboardHeight > 0 ? '0' : 'auto',
-                            right: keyboardHeight > 0 ? '0' : 'auto',
-                            width: keyboardHeight > 0 ? '100%' : 'auto',
-                            zIndex: keyboardHeight > 0 ? 50 : 'auto',
-                            paddingBottom: keyboardHeight > 0 ? 'env(safe-area-inset-bottom)' : '0',
+                            position: isKeyboardOpen ? 'fixed' : 'relative',
+                            bottom: isKeyboardOpen ? `${keyboardHeight}px` : 'auto',
+                            left: isKeyboardOpen ? '0' : 'auto',
+                            right: isKeyboardOpen ? '0' : 'auto',
+                            width: isKeyboardOpen ? '100%' : 'auto',
+                            zIndex: isKeyboardOpen ? 50 : 'auto',
+                            paddingBottom: isKeyboardOpen ? 'env(safe-area-inset-bottom, 0px)' : '0',
                         }}
                     >
                         <div className="w-full p-2.5 sm:p-4 md:p-6">
                             <div className="flex gap-2 sm:gap-3 items-end">
-                                <div className="flex-1 relative">
+                                <div className="flex-1 relative flex items-end">
                                     <textarea
                                         ref={inputRef}
                                         value={input}
@@ -628,6 +628,7 @@ export default function AiAssistant() {
                                     style={{
                                         minHeight: '44px',
                                         flexShrink: 0,
+                                        alignSelf: 'flex-end',
                                     }}
                                 >
                                     {isLoading ? (
@@ -639,7 +640,7 @@ export default function AiAssistant() {
                             </div>
                         </div>
                     </div>
-                    {keyboardHeight > 0 && (
+                    {isKeyboardOpen && (
                         <div style={{ height: `${inputContainerRef.current?.offsetHeight || 80}px` }} />
                     )}
                 </DrawerContent>
