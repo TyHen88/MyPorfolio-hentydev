@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/drawer'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@radix-ui/react-tooltip'
 
 interface Message {
     id: string
@@ -379,65 +380,75 @@ export default function AiAssistant() {
         <>
             <Drawer open={open} onOpenChange={setOpen} direction="right">
                 <DrawerTrigger asChild>
-                    <button
-                        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 h-12 w-12 sm:h-14 sm:w-14 rounded-full transition-all duration-500 hover:scale-110 active:scale-95 group cursor-pointer border-0 outline-none focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:ring-offset-2 focus:ring-offset-background"
-                        aria-label="Open AI Assistant"
-                        style={{
-                            animation: 'float 3s ease-in-out infinite'
-                        }}
-                    >
-                        {/* Glassmorphism sphere with gradient */}
-                        <div className="relative h-full w-full rounded-full bg-gradient-to-br from-orange-300/90 via-pink-400/80 to-purple-600/95 backdrop-blur-2xl border border-white/30 shadow-[0_8px_32px_0_rgba(147,51,234,0.37)] overflow-hidden">
-                            {/* Animated gradient overlay */}
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-orange-200/40 via-pink-300/30 to-purple-500/40 animate-pulse" />
-
-                            {/* Inner glow effect - top left highlight */}
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/40 via-white/15 to-transparent" />
-
-                            {/* Shimmer effect */}
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-
-                            {/* Sparkle icons - positioned like in the image */}
-                            <div className="absolute inset-0">
-                                {/* Large sparkle - left of center */}
-                                <Sparkles
-                                    className="absolute h-3 w-3 sm:h-4 sm:w-4 text-white left-[35%] top-[45%] drop-shadow-lg"
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <button
+                                    className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 h-12 w-12 sm:h-14 sm:w-14 rounded-full transition-all duration-500 hover:scale-110 active:scale-95 group cursor-pointer border-0 outline-none focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:ring-offset-2 focus:ring-offset-background"
+                                    aria-label="Open AI Assistant"
                                     style={{
-                                        animation: 'sparkle 2s ease-in-out infinite',
-                                        animationDelay: '0s'
+                                        animation: 'float 3s ease-in-out infinite'
                                     }}
-                                />
-                                {/* Medium sparkle - above and right */}
-                                <Sparkles
-                                    className="absolute h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 text-white left-[50%] top-[30%] drop-shadow-lg"
-                                    style={{
-                                        animation: 'sparkle 2.5s ease-in-out infinite',
-                                        animationDelay: '0.7s'
-                                    }}
-                                />
-                                {/* Small sparkle - below and right */}
-                                <Sparkles
-                                    className="absolute h-2.5 w-2.5 sm:h-3 sm:w-3 text-white left-[55%] top-[60%] drop-shadow-lg"
-                                    style={{
-                                        animation: 'sparkle 2.2s ease-in-out infinite',
-                                        animationDelay: '1.4s'
-                                    }}
-                                />
-                            </div>
+                                    onClick={() => setOpen(true)}
+                                >
+                                    {/* Glassmorphism sphere with gradient */}
+                                    <div className="relative h-full w-full rounded-full bg-gradient-to-br from-orange-300/90 via-pink-400/80 to-purple-600/95 backdrop-blur-2xl border border-white/30 shadow-[0_8px_32px_0_rgba(147,51,234,0.37)] overflow-hidden">
+                                        {/* Animated gradient overlay */}
+                                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-orange-200/40 via-pink-300/30 to-purple-500/40 animate-pulse" />
 
-                            {/* Hover glow effect */}
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-400/0 to-purple-600/0 group-hover:from-purple-400/40 group-hover:to-purple-600/50 transition-all duration-500" />
+                                        {/* Inner glow effect - top left highlight */}
+                                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/40 via-white/15 to-transparent" />
 
-                            {/* Outer ring glow on hover */}
-                            <div className="absolute -inset-0.5 rounded-full bg-gradient-to-br from-orange-300/0 via-pink-400/0 to-purple-600/0 group-hover:from-orange-300/30 group-hover:via-pink-400/30 group-hover:to-purple-600/30 blur-sm transition-all duration-500 -z-10" />
-                        </div>
+                                        {/* Shimmer effect */}
+                                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
 
-                        {/* Soft shadow with blur - enhanced */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-600/25 via-pink-500/20 to-orange-400/15 blur-xl -z-20 translate-y-1.5 group-hover:translate-y-2 group-hover:blur-2xl group-hover:opacity-80 transition-all duration-500" />
+                                        {/* Sparkle icons - positioned like in the image */}
+                                        <div className="absolute inset-0">
+                                            {/* Large sparkle - left of center */}
+                                            <Sparkles
+                                                className="absolute h-3 w-3 sm:h-4 sm:w-4 text-white left-[35%] top-[45%] drop-shadow-lg"
+                                                style={{
+                                                    animation: 'sparkle 2s ease-in-out infinite',
+                                                    animationDelay: '0s'
+                                                }}
+                                            />
+                                            {/* Medium sparkle - above and right */}
+                                            <Sparkles
+                                                className="absolute h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 text-white left-[50%] top-[30%] drop-shadow-lg"
+                                                style={{
+                                                    animation: 'sparkle 2.5s ease-in-out infinite',
+                                                    animationDelay: '0.7s'
+                                                }}
+                                            />
+                                            {/* Small sparkle - below and right */}
+                                            <Sparkles
+                                                className="absolute h-2.5 w-2.5 sm:h-3 sm:w-3 text-white left-[55%] top-[60%] drop-shadow-lg"
+                                                style={{
+                                                    animation: 'sparkle 2.2s ease-in-out infinite',
+                                                    animationDelay: '1.4s'
+                                                }}
+                                            />
+                                        </div>
 
-                        {/* Additional glow rings */}
-                        <div className="absolute inset-0 rounded-full border border-white/10 group-hover:border-white/20 transition-all duration-500 -z-10" />
-                    </button>
+                                        {/* Hover glow effect */}
+                                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-400/0 to-purple-600/0 group-hover:from-purple-400/40 group-hover:to-purple-600/50 transition-all duration-500" />
+
+                                        {/* Outer ring glow on hover */}
+                                        <div className="absolute -inset-0.5 rounded-full bg-gradient-to-br from-orange-300/0 via-pink-400/0 to-purple-600/0 group-hover:from-orange-300/30 group-hover:via-pink-400/30 group-hover:to-purple-600/30 blur-sm transition-all duration-500 -z-10" />
+                                    </div>
+
+                                    {/* Soft shadow with blur - enhanced */}
+                                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-600/25 via-pink-500/20 to-orange-400/15 blur-xl -z-20 translate-y-1.5 group-hover:translate-y-2 group-hover:blur-2xl group-hover:opacity-80 transition-all duration-500" />
+
+                                    {/* Additional glow rings */}
+                                    <div className="absolute inset-0 rounded-full border border-white/10 group-hover:border-white/20 transition-all duration-500 -z-10" />
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Open AI Assistant</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </DrawerTrigger>
                 <DrawerContent side="right" className="h-full w-full sm:max-w-lg">
                     <DrawerHeader className="border-b p-2.5 sm:p-4">

@@ -5,11 +5,11 @@ import { useEffect, useRef, useState } from 'react'
 const skillCategories = [
     {
         name: "Frontend",
-        skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Shadcn/UI"]
+        skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Shadcn/UI", "HTML", "CSS", "JavaScript", "MUI"]
     },
     {
         name: "Backend",
-        skills: ["Node.js", "Express", "PostgreSQL", "MongoDB", "REST APIs", "GraphQL"]
+        skills: ["Node.js", "Express", "PostgreSQL", "MongoDB", "REST APIs", "GraphQL", "Spring Boot", "Spring Security", "Spring Data JPA", "Spring Cloud", "Spring Batch"]
     },
     {
         name: "Tools & DevOps",

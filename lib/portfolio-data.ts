@@ -281,7 +281,7 @@ export const portfolioData = [
                 "url": "https://www.hentydev.site/#skills",
                 "scraped_at": "2025-11-15T15:24:40.996316",
                 "content": {
-                    "text": "03. Skills Frontend React Next.js TypeScript Tailwind CSS Framer Motion Shadcn/UI Backend Node.js Express PostgreSQL MongoDB REST APIs GraphQL Tools & DevOps Git Docker AWS Vercel CI/CD Webpack Design & UX Figma Responsive Design Accessibility UI/UX Principles Performance SEO",
+                    "text": "03. Skills Frontend React Next.js TypeScript Tailwind CSS Framer Motion Shadcn/UI Backend Node.js Express PostgreSQL MongoDB REST APIs GraphQL Spring Boot Spring Security Spring Data JPA Spring Cloud Spring Batch Tools & DevOps Git Docker AWS Vercel CI/CD Webpack Design & UX Figma Responsive Design Accessibility UI/UX Principles Performance SEO HTML CSS JavaScript MUI",
                     "headers": [
                         {
                             "level": "h2",
