@@ -1,27 +1,27 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Navigation from '@/components/navigation'
-import Hero from '@/components/hero'
-import About from '@/components/about'
-import Experience from '@/components/experience'
-import Skills from '@/components/skills'
-import Projects from '@/components/projects'
-import Blog from '@/components/blog'
-import Research from '@/components/research'
-import BestPractices from '@/components/best-practices'
-import Contact from '@/components/contact'
-import Footer from '@/components/footer'
-import AiAssistant from '@/components/ai-assistant/AiAssistant'
+import { useState, useEffect } from "react";
+import Navigation from "@/components/common/navigation";
+import Hero from "@/components/common/hero";
+import About from "@/components/about";
+import Experience from "@/components/experience";
+import Skills from "@/components/skills";
+import Projects from "@/components/projects";
+import Blog from "@/components/blog";
+import Research from "@/components/research";
+import BestPractices from "@/components/best-practices";
+import Contact from "@/components/contact";
+import Footer from "@/components/common/footer";
+import AiAssistant from "@/components/ai-assistant/AiAssistant";
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
-  if (!mounted) return null
+  if (!mounted) return null;
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -38,5 +38,5 @@ export default function Home() {
       <Footer />
       <AiAssistant />
     </main>
-  )
+  );
 }
