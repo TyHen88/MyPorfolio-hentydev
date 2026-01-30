@@ -25,8 +25,9 @@ async function getAiPrompts() {
     }
 }
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'AIzaSyCiH0GVvBpGgFqjEGsMLp4sRflgHJwLSHk'
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_API_KEY}`
+const AI_DISABLED = process.env.AI_DISABLED === 'true' || process.env.DISABLE_AI === 'true'
 
 interface ChatMessage {
     role: 'user' | 'assistant'
@@ -47,7 +48,8 @@ export async function GET() {
             checks: {
                 portfolioData: hasPortfolioData,
                 prompts: hasPrompts,
-                apiKey: !!GOOGLE_API_KEY
+                apiKey: !!GOOGLE_API_KEY,
+                aiDisabled: AI_DISABLED
             }
         })
     } catch (error) {
@@ -79,6 +81,13 @@ export async function POST(request: NextRequest) {
             return NextResponse.json(
                 { error: 'Message is required' },
                 { status: 400 }
+            )
+        }
+
+        if (AI_DISABLED) {
+            return NextResponse.json(
+                { error: 'AI assistant is temporarily disabled' },
+                { status: 503 }
             )
         }
 
