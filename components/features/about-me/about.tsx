@@ -33,16 +33,18 @@ export default function About() {
                         {/* Left side */}
                         <div className="space-y-4 text-muted-foreground leading-relaxed">
                             <p>
-                                I'm a passionate developer with a love for creating elegant solutions to complex problems.
-                                With expertise in modern web technologies, I build scalable, performant applications that users love.
+                                I'm Hen Ty—a full-stack developer who loves translating ambiguous product problems into reliable,
+                                user-friendly software. I move fluidly between architecting data models, building reusable React components,
+                                and automating delivery so teams can ship faster with confidence.
                             </p>
                             <p>
-                                When I'm not coding, you can find me contributing to open source, writing technical blog posts,
-                                or exploring new technologies and frameworks that push the boundaries of web development.
+                                My sweet spot is pairing TypeScript/Next.js interfaces with Node and Spring Boot services, PostgreSQL,
+                                and cloud-native infrastructure. I obsess over measurable performance, thoughtful UX, and documentation that makes
+                                future iterations easier for everyone on the team.
                             </p>
                             <p>
-                                My journey in tech started with a curiosity about how things work, and it has evolved into a
-                                deep passion for building products that make a meaningful impact.
+                                When I'm not iterating on client work, you'll find me mentoring other engineers, contributing to OSS, or writing about
+                                the patterns that help me build resilient platforms end-to-end.
                             </p>
                         </div>
 
@@ -50,15 +52,15 @@ export default function About() {
                         <div className="space-y-3">
                             <div className="bg-card border border-border rounded-lg p-4 hover-lift">
                                 <h3 className="font-semibold text-foreground mb-1">Technical Focus</h3>
-                                <p className="text-sm text-muted-foreground">Full-stack development with React, Next.js, TypeScript</p>
+                                <p className="text-sm text-muted-foreground">Type-safe Next.js frontends + Node/Spring Boot services</p>
                             </div>
                             <div className="bg-card border border-border rounded-lg p-4 hover-lift">
                                 <h3 className="font-semibold text-foreground mb-1">Experience</h3>
-                                <p className="text-sm text-muted-foreground">5+ years building scalable web applications</p>
+                                <p className="text-sm text-muted-foreground">3 years leading cross-functional product builds</p>
                             </div>
                             <div className="bg-card border border-border rounded-lg p-4 hover-lift">
                                 <h3 className="font-semibold text-foreground mb-1">Passion</h3>
-                                <p className="text-sm text-muted-foreground">Creating beautiful UX with clean, maintainable code</p>
+                                <p className="text-sm text-muted-foreground">Crafting accessible UX backed by reliable infrastructure</p>
                             </div>
                         </div>
                     </div>

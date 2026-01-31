@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button'
 
 export default function Contact() {
     const [isVisible, setIsVisible] = useState(false)
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [message, setMessage] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [success, setSuccess] = useState('')
+    const [error, setError] = useState('')
     const ref = useRef(null)
 
     useEffect(() => {
@@ -26,16 +27,37 @@ export default function Contact() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        setIsSubmitting(true)
+        setLoading(true)
+        setSuccess('')
+        setError('')
 
-        // Simulate form submission
-        setTimeout(() => {
-            setMessage('Thanks for reaching out! I\'ll get back to you soon.')
-            setIsSubmitting(false)
-            e.currentTarget.reset()
+        const form = e.currentTarget
+        const data = {
+            name: (form.name as HTMLInputElement).value,
+            email: (form.email as HTMLInputElement).value,
+            message: (form.message as HTMLTextAreaElement).value
+        }
 
-            setTimeout(() => setMessage(''), 3000)
-        }, 1500)
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+
+            const result = await res.json().catch(() => ({}))
+
+            if (res.ok) {
+                setSuccess("Thanks for reaching out! I'll get back to you soon.")
+                form.reset()
+            } else {
+                setError(result?.error || 'Unable to send message. Please try again later.')
+            }
+        } catch (err) {
+            setError('Something went wrong. Please try again.')
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -48,29 +70,39 @@ export default function Contact() {
                     </h2>
 
                     <p className="text-muted-foreground text-lg mb-12 max-w-xl mx-auto">
-                        Have a project in mind or just want to chat? Feel free to reach out. I'm always interested in hearing about new opportunities.
+                        Building a new product, modernizing a legacy system, or looking for a fractional full-stack partner?
+                        Let's chat about how I can help with architecture, delivery, and everything between design reviews and production support.
                     </p>
 
                     {/* Contact Form */}
                     <form onSubmit={handleSubmit} className="space-y-4 mb-8">
                         <input
+                            type="text"
+                            name="name"
+                            placeholder="Your name"
+                            required
+                            className="w-full px-4 py-3 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                        />
+                        <input
                             type="email"
+                            name="email"
                             placeholder="Your email address"
                             required
                             className="w-full px-4 py-3 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                         />
                         <textarea
                             placeholder="Your message"
+                            name="message"
                             rows={5}
                             required
                             className="w-full px-4 py-3 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                         />
                         <Button
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={loading}
                             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 font-semibold"
                         >
-                            {isSubmitting ? (
+                            {loading ? (
                                 <>
                                     <Loader2 className="animate-spin mr-2" size={18} />
                                     Sending...
@@ -84,9 +116,15 @@ export default function Contact() {
                         </Button>
                     </form>
 
-                    {message && (
-                        <div className="bg-primary/10 border border-primary text-primary px-4 py-3 rounded-lg mb-8 animate-fade-in-up">
-                            {message}
+                    {success && (
+                        <div className="px-4 py-3 rounded-lg mb-8 animate-fade-in-up border bg-primary/10 border-primary text-primary">
+                            {success}
+                        </div>
+                    )}
+
+                    {error && (
+                        <div className="px-4 py-3 rounded-lg mb-8 animate-fade-in-up border bg-destructive/10 border-destructive text-destructive">
+                            {error}
                         </div>
                     )}
 
@@ -97,7 +135,7 @@ export default function Contact() {
                             className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
                         >
                             <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">Email</div>
-                            <div className="text-sm text-muted-foreground">hentyn11@gmail.com</div>
+                            <div className="text-sm text-muted-foreground">hentyn11@gmail.com — share context & specs</div>
                         </a>
                         <a
                             href="https://www.linkedin.com/in/ty-hen-b7799b2a4?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
@@ -106,7 +144,7 @@ export default function Contact() {
                             className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
                         >
                             <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">LinkedIn</div>
-                            <div className="text-sm text-muted-foreground">Connect with me</div>
+                            <div className="text-sm text-muted-foreground">Swap product ideas & opportunities</div>
                         </a>
                         <a
                             href="https://github.com/TyHen88"
@@ -115,7 +153,7 @@ export default function Contact() {
                             className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
                         >
                             <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">GitHub</div>
-                            <div className="text-sm text-muted-foreground">View my projects</div>
+                            <div className="text-sm text-muted-foreground">Browse active builds & experiments</div>
                         </a>
                         <a
                             href="https://t.me/ahh_tiii"
@@ -124,7 +162,7 @@ export default function Contact() {
                             className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
                         >
                             <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">Telegram</div>
-                            <div className="text-sm text-muted-foreground">Chat with me</div>
+                            <div className="text-sm text-muted-foreground">Ping me for quick async syncs</div>
                         </a>
                     </div>
                 </div>

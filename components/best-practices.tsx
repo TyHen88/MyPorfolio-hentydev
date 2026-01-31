@@ -7,37 +7,37 @@ const practices = [
     {
         category: "Code Quality",
         items: [
-            "Write clean, readable, and maintainable code",
-            "Use TypeScript for type safety",
-            "Implement proper error handling",
-            "Follow SOLID principles"
+            "Model domains with TypeScript types that mirror API contracts",
+            "Document shared UI primitives inside a reusable component library",
+            "Automate unit, integration, and contract tests across the stack",
+            "Review pull requests with architectural context, not just syntax"
         ]
     },
     {
         category: "Performance",
         items: [
-            "Optimize bundle size and lazy loading",
-            "Implement code splitting",
-            "Use memoization and React.memo",
-            "Monitor Core Web Vitals"
+            "Measure Core Web Vitals and API latency with real telemetry",
+            "Lean on server components, streaming, and code splitting to reduce payloads",
+            "Apply layered caching (CDN, Redis, database) based on access patterns",
+            "Load test critical flows before toggling features on for customers"
         ]
     },
     {
         category: "Accessibility",
         items: [
-            "Follow WCAG 2.1 guidelines",
-            "Use semantic HTML",
-            "Test with screen readers",
-            "Ensure keyboard navigation"
+            "Prefer semantic HTML and ARIA-first components",
+            "Pair automated axe checks with manual keyboard and screen reader passes",
+            "Design contrast and motion systems that respect user preferences",
+            "Document accessible patterns inside the design system"
         ]
     },
     {
         category: "Security",
         items: [
-            "Protect against XSS attacks",
-            "Implement proper authentication",
-            "Validate and sanitize inputs",
-            "Keep dependencies updated"
+            "Enforce least-privilege IAM and rotated secrets in CI/CD",
+            "Validate every request with centralized schema validation",
+            "Adopt secure auth flows with token rotation and short-lived sessions",
+            "Continuously patch dependencies and monitor CVEs"
         ]
     },
 ]

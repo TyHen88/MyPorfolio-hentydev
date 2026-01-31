@@ -27,7 +27,7 @@ async function getAiPrompts() {
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'AIzaSyCiH0GVvBpGgFqjEGsMLp4sRflgHJwLSHk'
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_API_KEY}`
-
+const AI_DISABLED = process.env.AI_DISABLED === 'true' || process.env.DISABLE_AI === 'true'
 interface ChatMessage {
     role: 'user' | 'assistant'
     content: string
@@ -47,7 +47,8 @@ export async function GET() {
             checks: {
                 portfolioData: hasPortfolioData,
                 prompts: hasPrompts,
-                apiKey: !!GOOGLE_API_KEY
+                apiKey: !!GOOGLE_API_KEY,
+                aiDisabled: AI_DISABLED
             }
         })
     } catch (error) {

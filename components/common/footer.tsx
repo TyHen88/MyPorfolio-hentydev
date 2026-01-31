@@ -9,9 +9,9 @@ export default function Footer() {
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                     {/* Left side */}
                     <div className="flex items-center gap-2 text-muted-foreground">
-                        <span>Built with</span>
+                        <span>Designed & engineered by Hen Ty</span>
                         <Heart size={16} className="text-primary fill-primary" />
-                        <span>using Next.js & Tailwind CSS</span>
+                        {/* <span>with Next.js + Tailwind CSS</span> */}
                     </div>
 
                     {/* Social links */}

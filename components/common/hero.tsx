@@ -21,21 +21,21 @@ export default function Hero() {
                 {/* Greeting */}
                 <div className="mb-4 inline-block">
                     <span className="text-sm font-semibold text-accent uppercase tracking-widest bg-accent/10 px-4 py-1 rounded-full">
-                        Welcome to my portfolio
+                        Shipping dependable web products
                     </span>
                 </div>
 
                 {/* Main heading */}
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 leading-tight">
-                    <span className="block text-foreground mb-2">Hi, I'm a</span>
+                    <span className="block text-foreground mb-2">Hi, I'm Hen Ty</span>
                     <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                        Full-Stack Developer
+                        Full-Stack Product Engineer
                     </span>
                 </h1>
 
                 {/* Description */}
                 <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed">
-                    Crafting beautiful, performant web experiences with modern technologies. Specializing in React, Next.js, and TypeScript.
+                    I design, build, and scale web platforms end-to-end. From highly interactive React/Next.js experiences to resilient APIs in Node and Spring Boot backed by PostgreSQL on AWS, I turn complex product ideas into measured outcomes.
                 </p>
 
                 {/* CTA Buttons */}
@@ -51,16 +51,16 @@ export default function Hero() {
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-4 sm:gap-8 mb-8 text-center">
                     <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                        <div className="text-2xl sm:text-3xl font-bold text-primary">50+</div>
-                        <div className="text-sm text-muted-foreground">Projects</div>
+                        <div className="text-2xl sm:text-3xl font-bold text-primary">45+</div>
+                        <div className="text-sm text-muted-foreground">End-to-end launches</div>
                     </div>
                     <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                        <div className="text-2xl sm:text-3xl font-bold text-secondary">5+</div>
-                        <div className="text-sm text-muted-foreground">Years Exp.</div>
+                        <div className="text-2xl sm:text-3xl font-bold text-secondary">3+</div>
+                        <div className="text-sm text-muted-foreground">Years full-stack</div>
                     </div>
                     <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                        <div className="text-2xl sm:text-3xl font-bold text-accent">100%</div>
-                        <div className="text-sm text-muted-foreground">Dedicated</div>
+                        <div className="text-2xl sm:text-3xl font-bold text-accent">99.9%</div>
+                        <div className="text-sm text-muted-foreground">Uptime goals</div>
                     </div>
                 </div>
             </div>

@@ -9,11 +9,11 @@ const skillCategories = [
     },
     {
         name: "Backend",
-        skills: ["Node.js", "Express", "PostgreSQL", "MongoDB", "REST APIs", "GraphQL", "Spring Boot", "Spring Security", "Spring Data JPA", "Spring Cloud", "Spring Batch"]
+        skills: ["Node.js", "Express", "PostgreSQL", "MongoDB", "REST APIs",  "Spring Boot", "Spring Security", "Spring Data JPA", "Spring Cloud", "Spring Batch"]
     },
     {
         name: "Tools & DevOps",
-        skills: ["Git", "Docker", "AWS", "Vercel", "CI/CD", "Webpack"]
+        skills: ["Git", "Docker", "AWS", "Vercel", "CI/CD"]
     },
     {
         name: "Design & UX",
@@ -47,6 +47,10 @@ export default function Skills() {
                         <span className="text-primary">03.</span>
                         <span>Skills</span>
                     </h2>
+                    <p className="text-muted-foreground mb-10 max-w-3xl">
+                        This is the toolbox I reach for when designing accessible interfaces, modeling data, wiring resilient APIs,
+                        and automating delivery pipelines so every layer of the stack supports the product vision.
+                    </p>
 
                     <div className="grid md:grid-cols-2 gap-8">
                         {skillCategories.map((category, idx) => (

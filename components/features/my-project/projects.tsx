@@ -7,42 +7,42 @@ import { Button } from '@/components/ui/button'
 const projects = [
     {
         title: "E-Commerce Platform",
-        description: "A full-featured e-commerce platform built with Next.js and Stripe integration, featuring real-time inventory management.",
+        description: "Headless commerce stack built with Next.js App Router, server actions for checkout, Stripe billing, and event-driven inventory sync powered by PostgreSQL.",
         image: "/ecommerce-dashboard.png",
         technologies: ["Next.js", "TypeScript", "Stripe", "PostgreSQL", "Tailwind CSS"],
         links: { demo: "#", github: "#" }
     },
     {
         title: "Task Management App",
-        description: "Collaborative task management application with real-time updates, drag-and-drop interface, and team workspace.",
+        description: "Collaborative task platform featuring optimistic drag-and-drop boards, WebSocket presence, and role-based permissions that keep distributed teams aligned.",
         image: "/task-management-app.png",
         technologies: ["React", "Firebase", "Framer Motion", "Tailwind CSS"],
         links: { demo: "#", github: "#" }
     },
     {
         title: "AI Content Generator",
-        description: "AI-powered content generation tool using OpenAI API with advanced customization options and export capabilities.",
+        description: "AI authoring tool that orchestrates OpenAI, custom prompt chains, and background workers to produce long-form content with brand-ready exports.",
         image: "/ai-content-generator-interface.png",
         technologies: ["Next.js", "OpenAI", "TypeScript", "PostgreSQL"],
         links: { demo: "#", github: "#" }
     },
     {
         title: "Analytics Dashboard",
-        description: "Real-time analytics dashboard with interactive charts, data filtering, and comprehensive reporting features.",
+        description: "Streaming analytics dashboard ingesting Kafka topics, exposing drill-down filters, and visualizing KPI trends with reusable React data viz primitives.",
         image: "/analytics-dashboard.png",
         technologies: ["React", "Recharts", "TypeScript", "API Integration"],
         links: { demo: "#", github: "#" }
     },
     {
         title: "Social Media App",
-        description: "Full-featured social media platform with user authentication, real-time messaging, and feed algorithms.",
+        description: "Edge-ready social platform with secure auth, Socket.io messaging, MongoDB change streams, and personalized feed algorithms.",
         image: "/social-media-application-interface.jpg",
         technologies: ["Next.js", "Socket.io", "MongoDB", "Tailwind CSS"],
         links: { demo: "#", github: "#" }
     },
     {
         title: "Documentation Site",
-        description: "Comprehensive documentation site with advanced search, syntax highlighting, and offline support.",
+        description: "MDX-powered documentation system featuring Algolia search, automated versioning, and an offline-ready PWA shell for field teams.",
         image: "/documentation-website-interface.jpg",
         technologies: ["Next.js", "MDX", "Algolia", "Tailwind CSS"],
         links: { demo: "#", github: "#" }

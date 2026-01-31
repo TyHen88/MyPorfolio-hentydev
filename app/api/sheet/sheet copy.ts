@@ -114,9 +114,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         // Check if first row is a header
         const firstRow = allRows[0];
         const isHeader = firstRow && (
-            firstRow[COLUMNS.NAME]?.toLowerCase().includes('name') ||
-            firstRow[COLUMNS.GENDER]?.toLowerCase().includes('gender') ||
-            firstRow[COLUMNS.GMAIL]?.toLowerCase().includes('gmail')
+            String(firstRow[COLUMNS.NAME] || '').toLowerCase().includes('name') ||
+            String(firstRow[COLUMNS.GENDER] || '').toLowerCase().includes('gender') ||
+            String(firstRow[COLUMNS.GMAIL] || '').toLowerCase().includes('gmail')
         );
 
         // Skip header if present
@@ -183,9 +183,9 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 
         const allRows = currentData.data.values || [];
         const isHeader = allRows.length > 0 && (
-            allRows[0][COLUMNS.NAME]?.toLowerCase().includes('name') ||
-            allRows[0][COLUMNS.GENDER]?.toLowerCase().includes('gender') ||
-            allRows[0][COLUMNS.GMAIL]?.toLowerCase().includes('gmail')
+            String(allRows[0][COLUMNS.NAME] || '').toLowerCase().includes('name') ||
+            String(allRows[0][COLUMNS.GENDER] || '').toLowerCase().includes('gender') ||
+            String(allRows[0][COLUMNS.GMAIL] || '').toLowerCase().includes('gmail')
         );
 
         // Calculate the next row number
@@ -253,9 +253,9 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse) {
             // Check if first row is a header
             const firstRow = allRows[0];
             const isHeader = firstRow && (
-                firstRow[COLUMNS.NAME]?.toLowerCase().includes('name') ||
-                firstRow[COLUMNS.GENDER]?.toLowerCase().includes('gender') ||
-                firstRow[COLUMNS.GMAIL]?.toLowerCase().includes('gmail')
+                String(firstRow[COLUMNS.NAME] || '').toLowerCase().includes('name') ||
+                String(firstRow[COLUMNS.GENDER] || '').toLowerCase().includes('gender') ||
+                String(firstRow[COLUMNS.GMAIL] || '').toLowerCase().includes('gmail')
             );
 
             // Calculate actual row index in the array
@@ -351,9 +351,9 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse) {
             // Check if first row is a header
             const firstRow = allRows[0];
             const isHeader = firstRow && (
-                firstRow[COLUMNS.NAME]?.toLowerCase().includes('name') ||
-                firstRow[COLUMNS.GENDER]?.toLowerCase().includes('gender') ||
-                firstRow[COLUMNS.GMAIL]?.toLowerCase().includes('gmail')
+                String(firstRow[COLUMNS.NAME] || '').toLowerCase().includes('name') ||
+                String(firstRow[COLUMNS.GENDER] || '').toLowerCase().includes('gender') ||
+                String(firstRow[COLUMNS.GMAIL] || '').toLowerCase().includes('gmail')
             );
 
             // Calculate actual row index in the array

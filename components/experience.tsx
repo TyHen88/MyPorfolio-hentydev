@@ -4,25 +4,25 @@ import { useEffect, useRef, useState } from 'react'
 
 const experiences = [
     {
-        title: "Senior Frontend Engineer",
-        company: "Tech Company Inc.",
-        date: "2022 - Present",
-        description: "Led frontend development for enterprise applications, mentored junior developers, and implemented performance optimizations.",
-        technologies: ["React", "TypeScript", "Next.js", "Tailwind CSS"]
+        title: "Web Developer",
+        company: "KOSIGN (Cambodia) Investment Co.,Ltd.",
+        date: "2025 - Present",
+        description: "Developed and maintained multiple client-facing web applications using Next.js and TypeScript, ensuring responsive design and optimal performance across devices.",
+        technologies: ["Next.js", "TypeScript", "MUI", "Git"]
     },
     {
-        title: "Full-Stack Developer",
-        company: "StartUp Co.",
-        date: "2020 - 2022",
-        description: "Built end-to-end features for SaaS platform, managed database design, and improved app performance by 40%.",
-        technologies: ["React", "Node.js", "PostgreSQL", "AWS"]
+        title: "Software Engineer",
+        company: "KOSIGN (Cambodia) Investment Co.,Ltd.",
+        date: "2023 - 2025",
+        description: "Built and optimized backend services with Spring Boot and PostgreSQL, enhancing application scalability and reliability. Collaborated with cross-functional teams to deliver end-to-end solutions.",
+        technologies: ["Next.js", "TypeScript", "Spring Boot", "PostgreSQL", "Spring Security", "Spring Data JPA", "Spring Batch", "Git"]
     },
     {
-        title: "Junior Web Developer",
-        company: "Digital Agency",
-        date: "2018 - 2020",
-        description: "Developed responsive websites and web applications, collaborated with design team, and learned best practices.",
-        technologies: ["HTML", "CSS", "JavaScript", "React"]
+        title: "Junior Full-Stack Developer",
+        company: "Korea Software HRD Center (Training Program)",
+        date: "2022 - 2023",
+        description: "Contributed to the development of full-stack web applications, focusing on frontend interfaces with React and backend APIs with Java. Participated in code reviews and agile ceremonies to improve team productivity.",
+        technologies: ["JavaScript", "Next.js", "React", "Java", "Spring Boot", "HTML", "CSS", "AWS", "Tailwind CSS", "Git", "Figma"]
     },
 ]
 

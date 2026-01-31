@@ -34,6 +34,10 @@ export default function Blog() {
                         <span className="text-primary">05.</span>
                         <span>Latest Blog Posts</span>
                     </h2>
+                    <p className="text-muted-foreground mb-10 max-w-3xl">
+                        I document the systems thinking behind my full-stack work—architecture notes, performance tuning tips,
+                        and lessons from pairing product strategy with modern web tooling.
+                    </p>
 
                     <div className="space-y-6">
                         {blogPosts.map((post, idx) => (
