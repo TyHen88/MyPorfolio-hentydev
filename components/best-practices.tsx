@@ -2,45 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Check } from 'lucide-react'
-
-const practices = [
-    {
-        category: "Code Quality",
-        items: [
-            "Write clean, readable, and maintainable code",
-            "Use TypeScript for type safety",
-            "Implement proper error handling",
-            "Follow SOLID principles"
-        ]
-    },
-    {
-        category: "Performance",
-        items: [
-            "Optimize bundle size and lazy loading",
-            "Implement code splitting",
-            "Use memoization and React.memo",
-            "Monitor Core Web Vitals"
-        ]
-    },
-    {
-        category: "Accessibility",
-        items: [
-            "Follow WCAG 2.1 guidelines",
-            "Use semantic HTML",
-            "Test with screen readers",
-            "Ensure keyboard navigation"
-        ]
-    },
-    {
-        category: "Security",
-        items: [
-            "Protect against XSS attacks",
-            "Implement proper authentication",
-            "Validate and sanitize inputs",
-            "Keep dependencies updated"
-        ]
-    },
-]
+import { bestPracticesSection } from '@/lib/portfolio-mock-data'
 
 export default function BestPractices() {
     const [isVisible, setIsVisible] = useState(false)
@@ -66,11 +28,11 @@ export default function BestPractices() {
                 <div ref={ref}>
                     <h2 className="text-3xl sm:text-5xl font-bold mb-12 flex items-center gap-3">
                         <span className="text-accent">07.</span>
-                        <span>Best Practices</span>
+                        <span>{bestPracticesSection.title}</span>
                     </h2>
 
                     <div className="grid md:grid-cols-2 gap-8">
-                        {practices.map((practice, idx) => (
+                        {bestPracticesSection.categories.map((practice, idx) => (
                             <div
                                 key={idx}
                                 className={`bg-card border border-border rounded-lg p-6 transition-all duration-700 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'

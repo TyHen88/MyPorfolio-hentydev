@@ -2,29 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Lightbulb } from 'lucide-react'
-
-const researchItems = [
-    {
-        title: "Web Performance Optimization",
-        description: "Deep dive into Core Web Vitals, image optimization, and caching strategies.",
-        progress: 75
-    },
-    {
-        title: "AI Integration in Web Apps",
-        description: "Exploring LLMs, embedding APIs, and real-time AI features in web applications.",
-        progress: 60
-    },
-    {
-        title: "Micro Frontends Architecture",
-        description: "Researching module federation and independent component deployment.",
-        progress: 50
-    },
-    {
-        title: "Web3 & Smart Contracts",
-        description: "Learning about blockchain integration and decentralized applications.",
-        progress: 40
-    },
-]
+import { researchSection } from '@/lib/portfolio-mock-data'
 
 export default function Research() {
     const [isVisible, setIsVisible] = useState(false)
@@ -50,11 +28,11 @@ export default function Research() {
                 <div ref={ref}>
                     <h2 className="text-3xl sm:text-5xl font-bold mb-12 flex items-center gap-3">
                         <span className="text-secondary">06.</span>
-                        <span>Research & Learning</span>
+                        <span>{researchSection.title}</span>
                     </h2>
 
                     <div className="grid md:grid-cols-2 gap-6">
-                        {researchItems.map((item, idx) => (
+                        {researchSection.items.map((item, idx) => (
                             <div
                                 key={idx}
                                 className={`bg-card border border-border rounded-lg p-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'

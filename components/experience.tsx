@@ -1,30 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-
-const experiences = [
-    {
-        title: "Senior Frontend Engineer",
-        company: "Tech Company Inc.",
-        date: "2022 - Present",
-        description: "Led frontend development for enterprise applications, mentored junior developers, and implemented performance optimizations.",
-        technologies: ["React", "TypeScript", "Next.js", "Tailwind CSS"]
-    },
-    {
-        title: "Full-Stack Developer",
-        company: "StartUp Co.",
-        date: "2020 - 2022",
-        description: "Built end-to-end features for SaaS platform, managed database design, and improved app performance by 40%.",
-        technologies: ["React", "Node.js", "PostgreSQL", "AWS"]
-    },
-    {
-        title: "Junior Web Developer",
-        company: "Digital Agency",
-        date: "2018 - 2020",
-        description: "Developed responsive websites and web applications, collaborated with design team, and learned best practices.",
-        technologies: ["HTML", "CSS", "JavaScript", "React"]
-    },
-]
+import { experienceSection } from '@/lib/portfolio-mock-data'
 
 export default function Experience() {
     const [isVisible, setIsVisible] = useState(false)
@@ -50,11 +27,11 @@ export default function Experience() {
                 <div ref={ref}>
                     <h2 className="text-3xl sm:text-5xl font-bold mb-12 flex items-center gap-3">
                         <span className="text-primary">02.</span>
-                        <span>Experience</span>
+                        <span>{experienceSection.title}</span>
                     </h2>
 
                     <div className="space-y-8">
-                        {experiences.map((exp, idx) => (
+                        {experienceSection.items.map((exp, idx) => (
                             <div
                                 key={idx}
                                 className={`border-l-2 border-primary pl-6 pb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'

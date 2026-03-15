@@ -5,6 +5,7 @@ import { Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { getAllBlogPosts } from '@/lib/blog-data'
+import { blogSection } from '@/lib/portfolio-mock-data'
 
 const blogPosts = getAllBlogPosts()
 
@@ -13,11 +14,18 @@ export default function Blog() {
     const ref = useRef(null)
 
     useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-                setIsVisible(true)
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                    observer.unobserve(entry.target)
+                }
+            },
+            {
+                threshold: 0.18,
+                rootMargin: '0px 0px -10% 0px'
             }
-        })
+        )
 
         if (ref.current) {
             observer.observe(ref.current)
@@ -26,22 +34,32 @@ export default function Blog() {
         return () => observer.disconnect()
     }, [])
 
+    const introRevealClass = isVisible ? 'opacity-100 translate-y-0 blur-0' : 'opacity-0 translate-y-8 blur-[6px]'
+
     return (
         <section id="blog" className="py-20 px-4 bg-gradient-to-b from-transparent to-card/30">
             <div className="max-w-4xl mx-auto">
                 <div ref={ref}>
-                    <h2 className="text-3xl sm:text-5xl font-bold mb-12 flex items-center gap-3">
-                        <span className="text-primary">05.</span>
-                        <span>Latest Blog Posts</span>
-                    </h2>
+                    <div
+                        className={`mb-10 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${introRevealClass}`}
+                    >
+                        <h2 className="text-3xl sm:text-5xl font-bold mb-4 flex items-center gap-3">
+                            <span className="text-primary">05.</span>
+                            <span>{blogSection.title}</span>
+                        </h2>
+                        <p className="text-muted-foreground max-w-3xl">
+                            {blogSection.description}
+                        </p>
+                    </div>
 
                     <div className="space-y-6">
                         {blogPosts.map((post, idx) => (
                             <article
                                 key={idx}
-                                className={`bg-card border border-border rounded-lg p-6 hover-lift transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-                                    }`}
-                                style={{ transitionDelay: `${idx * 100}ms` }}
+                                className={`bg-card border border-border rounded-lg p-6 hover-lift transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                    isVisible ? 'opacity-100 translate-x-0 blur-0' : 'opacity-0 -translate-x-10 blur-[6px]'
+                                }`}
+                                style={{ transitionDelay: `${180 + idx * 100}ms` }}
                             >
                                 <Link href={`/blog/${post.slug}`}>
                                     <div className="flex flex-col gap-4">
@@ -80,7 +98,12 @@ export default function Blog() {
                         ))}
                     </div>
 
-                    <div className="mt-8 text-center">
+                    <div
+                        className={`mt-8 text-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                        }`}
+                        style={{ transitionDelay: `${220 + blogPosts.length * 100}ms` }}
+                    >
                         <Button asChild variant="outline" className="hover-scale">
                             <a href="/blog">View All Articles</a>
                         </Button>

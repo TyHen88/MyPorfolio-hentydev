@@ -243,11 +243,32 @@ export default function AiAssistant() {
                 return
             }
 
+            if (line.startsWith('#### ')) {
+                parts.push(
+                    <h4 key={`h4-${key++}`} className="text-base font-semibold mt-3 mb-2 text-foreground/90">
+                        {formatInlineMarkdown(line.substring(5), key)}
+                    </h4>
+                )
+                return
+            }
+
             if (line.startsWith('## ')) {
                 parts.push(
                     <h2 key={`h2-${key++}`} className="text-xl font-bold mt-4 mb-2">
                         {formatInlineMarkdown(line.substring(3), key)}
                     </h2>
+                )
+                return
+            }
+
+            if (line.trim().startsWith('> ')) {
+                parts.push(
+                    <blockquote
+                        key={`quote-${key++}`}
+                        className="my-3 rounded-r-lg border-l-2 border-primary/50 bg-primary/5 px-3 py-2 text-sm text-foreground/85"
+                    >
+                        {formatInlineMarkdown(line.trim().substring(2), key)}
+                    </blockquote>
                 )
                 return
             }
@@ -344,7 +365,7 @@ export default function AiAssistant() {
                             href={match[2]}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary underline hover:text-primary/80 transition-colors"
+                            className="font-medium text-primary underline decoration-primary/40 underline-offset-4 hover:text-primary/80 hover:decoration-primary transition-colors break-words"
                         >
                             {match[1]}
                         </a>
@@ -659,4 +680,3 @@ export default function AiAssistant() {
         </>
     )
 }
-

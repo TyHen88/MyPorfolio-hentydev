@@ -51,7 +51,7 @@ export const portfolioData = [
                 "url": "https://www.hentydev.site/#about",
                 "scraped_at": "2025-11-15T15:24:40.996312",
                 "content": {
-                    "text": "01. About Me I'm a passionate developer with a love for creating elegant solutions to complex problems. With expertise in modern web technologies, I build scalable, performant applications that users love. When I'm not coding, you can find me contributing to open source, writing technical blog posts, or exploring new technologies and frameworks that push the boundaries of web development. My journey in tech started with a curiosity about how things work, and it has evolved into a deep passion for building products that make a meaningful impact. Technical Focus Full-stack development with React, Next.js, TypeScript Experience 5+ years building scalable web applications Passion Creating beautiful UX with clean, maintainable code",
+                    "text": "01. About Me I'm a passionate developer with a love for creating elegant solutions to complex problems. With expertise in modern web technologies, I build scalable, performant applications that users love. When I'm not coding, you can find me contributing to open source, writing technical blog posts, or exploring new technologies and frameworks that push the boundaries of web development. My journey in tech started with a curiosity about how things work, and it has evolved into a deep passion for building products that make a meaningful impact. Technical Focus Full-stack development with React, Next.js, TypeScript Experience 3+ years building scalable web applications Passion Creating beautiful UX with clean, maintainable code",
                     "headers": [
                         {
                             "level": "h2",
@@ -75,7 +75,7 @@ export const portfolioData = [
                         "When I'm not coding, you can find me contributing to open source, writing technical blog posts, or exploring new technologies and frameworks that push the boundaries of web development.",
                         "My journey in tech started with a curiosity about how things work, and it has evolved into a deep passion for building products that make a meaningful impact.",
                         "Full-stack development with React, Next.js, TypeScript",
-                        "5+ years building scalable web applications",
+                        "3+ years building scalable web applications",
                         "Creating beautiful UX with clean, maintainable code"
                     ]
                 }
@@ -281,7 +281,7 @@ export const portfolioData = [
                 "url": "https://www.hentydev.site/#skills",
                 "scraped_at": "2025-11-15T15:24:40.996316",
                 "content": {
-                    "text": "03. Skills Frontend React Next.js TypeScript Tailwind CSS Framer Motion Shadcn/UI Backend Node.js Express PostgreSQL MongoDB REST APIs GraphQL Spring Boot Spring Security Spring Data JPA Spring Cloud Spring Batch Tools & DevOps Git Docker AWS Vercel CI/CD Webpack Design & UX Figma Responsive Design Accessibility UI/UX Principles Performance SEO HTML CSS JavaScript MUI",
+                    "text": "03. Skills Frontend React Next.js TypeScript Tailwind CSS Framer Motion Shadcn/UI Backend Node.js Express PostgreSQL MongoDB REST APIs Spring Boot Spring Security Spring Data JPA Spring Cloud Spring Batch Tools & DevOps Git Docker AWS Vercel CI/CD Design & UX Figma Responsive Design Accessibility UI/UX Principles Performance SEO HTML CSS JavaScript MUI",
                     "headers": [
                         {
                             "level": "h2",

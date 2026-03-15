@@ -14,14 +14,21 @@ import {
 
 export function ModeToggle({ open, setOpen, onThemeChange }: { open: boolean, setOpen: (open: boolean) => void, onThemeChange?: () => void }) {
     const { setTheme, theme } = useTheme()
+    const [mounted, setMounted] = React.useState(false)
+
+    React.useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const getCurrentModeLabel = () => {
+        if (!mounted) return "Theme"
         if (theme === "dark") return "Developer"
         if (theme === "light") return "Light"
         return "System"
     }
 
     const getCurrentIcon = () => {
+        if (!mounted) return <Moon className="mr-2 h-4 w-4" />
         if (theme === "dark") return <Moon className="mr-2 h-4 w-4" />
         if (theme === "light") return <Sun className="mr-2 h-4 w-4" />
         return <Moon className="mr-2 h-4 w-4" />

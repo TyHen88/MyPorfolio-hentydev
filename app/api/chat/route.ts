@@ -1,246 +1,288 @@
-import { NextRequest, NextResponse } from 'next/server'
+import OpenAI from "openai";
+import { NextRequest, NextResponse } from "next/server";
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
+import {
+  buildPortfolioKnowledgeBase,
+  buildPortfolioKnowledgeBaseString,
+} from "@/lib/ai-context";
+import { aiPrompts } from "@/lib/ai-prompts";
 
-// Dynamic imports to avoid module loading errors at build time
-async function getPortfolioData() {
-    try {
-        const module = await import('@/lib/portfolio-data')
-        return module.portfolioData
-    } catch (e) {
-        console.error('Failed to load portfolio data:', e)
-        return null
-    }
-}
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
-async function getAiPrompts() {
-    try {
-        const module = await import('@/lib/ai-prompts')
-        return module.aiPrompts
-    } catch (e) {
-        console.error('Failed to load AI prompts:', e)
-        return 'You are a helpful AI assistant.'
-    }
-}
-
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_API_KEY}`
-const AI_DISABLED = process.env.AI_DISABLED === 'true' || process.env.DISABLE_AI === 'true'
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-5-mini";
+const AI_DISABLED =
+  process.env.AI_DISABLED === "true" || process.env.DISABLE_AI === "true";
 
 interface ChatMessage {
-    role: 'user' | 'assistant'
-    content: string
+  role: "user" | "assistant";
+  content: string;
+}
+
+type KnowledgeBase = ReturnType<typeof buildPortfolioKnowledgeBase>;
+
+function getOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY is not configured.");
+  }
+
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
+
+function formatConversationHistory(history: ChatMessage[]) {
+  const trimmedHistory = history
+    .filter((message) => message.role && message.content?.trim())
+    .slice(-12);
+
+  if (trimmedHistory.length === 0) {
+    return "No previous conversation.";
+  }
+
+  return trimmedHistory
+    .map(
+      (message) =>
+        `${message.role === "assistant" ? "Assistant" : "User"}: ${message.content.trim()}`,
+    )
+    .join("\n\n");
+}
+
+function buildUserInput(
+  message: string,
+  history: ChatMessage[],
+  knowledgeBaseString: string,
+) {
+  const conversationHistory = formatConversationHistory(history);
+
+  return [
+    "Portfolio knowledge base:",
+    knowledgeBaseString,
+    "",
+    "Conversation history:",
+    conversationHistory,
+    "",
+    "Current user message:",
+    message.trim(),
+  ].join("\n");
+}
+
+function pickReferences(message: string, knowledgeBase: KnowledgeBase) {
+  const query = message.toLowerCase();
+  const refs = knowledgeBase.references || [];
+  const picks = new Map<string, { label: string; url: string }>();
+
+  const addIfPresent = (matcher: (ref: (typeof refs)[number]) => boolean) => {
+    const ref = refs.find((item) => item.url && matcher(item));
+
+    if (ref) {
+      picks.set(ref.url, { label: ref.label, url: ref.url });
+    }
+  };
+
+  if (query.includes("experience") || query.includes("work")) {
+    addIfPresent((ref) => ref.label.toLowerCase().includes("experience"));
+  }
+
+  if (query.includes("skill") || query.includes("tech")) {
+    addIfPresent((ref) => ref.label.toLowerCase().includes("skills"));
+  }
+
+  if (query.includes("project")) {
+    addIfPresent((ref) => ref.label.toLowerCase().includes("projects"));
+  }
+
+  if (
+    query.includes("blog") ||
+    query.includes("article") ||
+    query.includes("write")
+  ) {
+    addIfPresent((ref) => ref.type === "route" && ref.url.includes("/blog"));
+  }
+
+  if (query.includes("research") || query.includes("learn")) {
+    addIfPresent((ref) => ref.label.toLowerCase().includes("research"));
+  }
+
+  if (
+    query.includes("best practice") ||
+    query.includes("performance") ||
+    query.includes("security") ||
+    query.includes("accessibility")
+  ) {
+    addIfPresent((ref) => ref.label.toLowerCase().includes("best practices"));
+  }
+
+  if (query.includes("contact") || query.includes("reach")) {
+    addIfPresent((ref) => ref.label.toLowerCase().includes("contact"));
+  }
+
+  if (query.includes("admin")) {
+    addIfPresent((ref) => ref.label.toLowerCase().includes("admin contents"));
+  }
+
+  if (query.includes("api") || query.includes("endpoint")) {
+    addIfPresent((ref) => ref.label.toLowerCase().includes("ai chat api"));
+    addIfPresent((ref) => ref.label.toLowerCase().includes("contact api"));
+    addIfPresent((ref) =>
+      ref.label.toLowerCase().includes("content sheet api"),
+    );
+  }
+
+  knowledgeBase.blogPosts.forEach((post) => {
+    if (
+      query.includes(post.slug.toLowerCase()) ||
+      query.includes(post.title.toLowerCase())
+    ) {
+      picks.set(post.url, { label: post.title, url: post.url });
+    }
+  });
+
+  if (picks.size === 0) {
+    addIfPresent((ref) => ref.label.toLowerCase().includes("about"));
+    addIfPresent((ref) => ref.label.toLowerCase().includes("projects"));
+  }
+
+  if (picks.size === 0 && knowledgeBase.site.baseUrl) {
+    picks.set(knowledgeBase.site.baseUrl, {
+      label: "Portfolio home",
+      url: knowledgeBase.site.baseUrl,
+    });
+  }
+
+  return Array.from(picks.values()).slice(0, 3);
+}
+
+function ensureReferenceBlock(
+  responseText: string,
+  message: string,
+  knowledgeBase: KnowledgeBase,
+) {
+  const hasLink = /\[[^\]]+\]\(([^)]+)\)/.test(responseText);
+  const hasReferenceBlock =
+    responseText.includes("### References") || /^>\s+/m.test(responseText);
+
+  if (hasLink && hasReferenceBlock) {
+    return responseText;
+  }
+
+  const references = pickReferences(message, knowledgeBase);
+
+  if (references.length === 0) {
+    return responseText;
+  }
+
+  const referenceBlock = [
+    "### References",
+    ...references.map((ref) => `> [${ref.label}](${ref.url})`),
+  ].join("\n");
+
+  return `${responseText.trim()}\n\n${referenceBlock}`;
 }
 
 export async function GET() {
-    try {
-        // Test if imports are working
-        const portfolioData = await getPortfolioData()
-        const aiPrompts = await getAiPrompts()
-        const hasPortfolioData = portfolioData && Array.isArray(portfolioData) && portfolioData.length > 0
-        const hasPrompts = !!aiPrompts
+  try {
+    const knowledgeBase = buildPortfolioKnowledgeBase();
 
-        return NextResponse.json({
-            message: 'Chat API is working',
-            status: 'ok',
-            checks: {
-                portfolioData: hasPortfolioData,
-                prompts: hasPrompts,
-                apiKey: !!GOOGLE_API_KEY,
-                aiDisabled: AI_DISABLED
-            }
-        })
-    } catch (error) {
-        console.error('GET endpoint error:', error)
-        return NextResponse.json({
-            error: 'GET endpoint error',
-            details: error instanceof Error ? error.message : 'Unknown error',
-            stack: error instanceof Error ? error.stack : undefined
-        }, { status: 500 })
-    }
+    return NextResponse.json({
+      message: "Chat API is working",
+      status: "ok",
+      provider: "openai",
+      checks: {
+        prompts: !!aiPrompts,
+        knowledgeBase:
+          knowledgeBase.sections.length > 0 ||
+          knowledgeBase.blogPosts.length > 0,
+        apiKey: !!process.env.OPENAI_API_KEY,
+        aiDisabled: AI_DISABLED,
+        model: OPENAI_MODEL,
+      },
+    });
+  } catch (error) {
+    console.error("GET endpoint error:", error);
+
+    return NextResponse.json(
+      {
+        error: "GET endpoint error",
+        details: error instanceof Error ? error.message : "Unknown error",
+        stack: error instanceof Error ? error.stack : undefined,
+      },
+      { status: 500 },
+    );
+  }
 }
 
 export async function POST(request: NextRequest) {
-    try {
-        let body
-        try {
-            body = await request.json()
-        } catch (parseError) {
-            console.error('Failed to parse request body:', parseError)
-            return NextResponse.json(
-                { error: 'Invalid JSON in request body' },
-                { status: 400 }
-            )
-        }
-
-        const { message, history = [], sessionId, images } = body
-
-        if (!message) {
-            return NextResponse.json(
-                { error: 'Message is required' },
-                { status: 400 }
-            )
-        }
-
-        if (AI_DISABLED) {
-            return NextResponse.json(
-                { error: 'AI assistant is temporarily disabled' },
-                { status: 503 }
-            )
-        }
-
-        // Load portfolio data and prompts
-        const portfolioData = await getPortfolioData()
-        const aiPrompts = await getAiPrompts()
-
-        // Check if portfolio data exists
-        if (!portfolioData || !Array.isArray(portfolioData) || portfolioData.length === 0) {
-            console.error('Portfolio data is missing or invalid')
-            return NextResponse.json(
-                { error: 'Portfolio data not available' },
-                { status: 500 }
-            )
-        }
-
-        // Build the system prompt with portfolio data
-        // Limit the portfolio data size to avoid token limits
-        let portfolioSummary
-        let systemPrompt
-
-        try {
-            portfolioSummary = {
-                sections: portfolioData[0].sections?.map((section: any) => ({
-                    section_id: section.section_id,
-                    content: {
-                        headers: section.content?.headers || [],
-                        paragraphs: section.content?.paragraphs?.slice(0, 5) || [], // Limit paragraphs
-                        links: section.content?.links || [],
-                    }
-                })) || [],
-                routes: portfolioData[0].routes || []
-            }
-
-            const portfolioDataStr = JSON.stringify(portfolioSummary, null, 2)
-
-            // Limit total prompt size to avoid token limits (roughly 30k characters)
-            const maxPromptLength = 30000
-            const basePrompt = `${aiPrompts}\n\n## Portfolio Data (JSON):\n`
-            const footer = `\n\nUse the above portfolio data to answer user questions. Always extract information from the provided JSON structure and never fabricate information not present in the data.`
-            const availableLength = maxPromptLength - basePrompt.length - footer.length
-
-            const truncatedData = portfolioDataStr.length > availableLength
-                ? portfolioDataStr.substring(0, availableLength) + '... (truncated)'
-                : portfolioDataStr
-
-            systemPrompt = basePrompt + truncatedData + footer
-        } catch (dataError) {
-            console.error('Error processing portfolio data:', dataError)
-            return NextResponse.json(
-                { error: 'Failed to process portfolio data', details: dataError instanceof Error ? dataError.message : 'Unknown error' },
-                { status: 500 }
-            )
-        }
-
-        // Convert history to Gemini format
-        const conversationHistory = history
-            .filter((msg: ChatMessage) => msg.role && msg.content)
-            .map((msg: ChatMessage) => ({
-                role: msg.role === 'user' ? 'user' : 'model',
-                parts: [{ text: msg.content }]
-            }))
-
-        // Build the request payload for Gemini
-        // Gemini needs alternating user/model messages
-        // Combine system prompt with current message, then add conversation history
-        const userMessage = conversationHistory.length > 0
-            ? message  // If there's history, just send the current message
-            : `${systemPrompt}\n\nUser question: ${message}`  // First message includes system prompt
-
-        const contents: any[] = []
-
-        // Add conversation history first if it exists
-        if (conversationHistory.length > 0) {
-            // Add system prompt as first message if we have history
-            contents.push({
-                role: 'user',
-                parts: [{ text: systemPrompt }]
-            })
-            contents.push({
-                role: 'model',
-                parts: [{ text: 'I understand. I\'ll help you find information from the portfolio data.' }]
-            })
-            // Add existing conversation history
-            contents.push(...conversationHistory)
-        }
-
-        // Add current user message
-        contents.push({
-            role: 'user',
-            parts: [
-                {
-                    text: userMessage
-                }
-            ]
-        })
-
-        // Call Gemini API
-        const response = await fetch(GEMINI_API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contents,
-                generationConfig: {
-                    temperature: 0.7,
-                    topK: 40,
-                    topP: 0.95,
-                    maxOutputTokens: 2048,
-                },
-            }),
-        })
-
-        if (!response.ok) {
-            const errorData = await response.text()
-            console.error('Gemini API error:', errorData)
-            return NextResponse.json(
-                { error: 'Failed to get response from AI', details: errorData },
-                { status: response.status }
-            )
-        }
-
-        const data = await response.json()
-
-        // Extract the response text from Gemini
-        const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text ||
-            "I'm sorry, I couldn't generate a response. Please try again."
-
-        return NextResponse.json({
-            message: aiResponse,
-            sessionId: sessionId || `session-${Date.now()}`,
-        })
-    } catch (error) {
-        console.error('Chat API error:', error)
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-        const errorStack = error instanceof Error ? error.stack : undefined
-
-        // Log full error details for debugging
-        console.error('Error details:', {
-            message: errorMessage,
-            stack: errorStack,
-            type: typeof error
-        })
-
-        return NextResponse.json(
-            {
-                error: 'Internal server error',
-                details: errorMessage,
-                ...(process.env.NODE_ENV === 'development' && { stack: errorStack })
-            },
-            { status: 500 }
-        )
+  try {
+    if (AI_DISABLED) {
+      return NextResponse.json(
+        { error: "AI assistant is currently disabled." },
+        { status: 503 },
+      );
     }
-}
 
+    let body;
+
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      console.error("Failed to parse request body:", parseError);
+
+      return NextResponse.json(
+        { error: "Invalid JSON in request body" },
+        { status: 400 },
+      );
+    }
+
+    const { message, history = [], sessionId } = body;
+    const normalizedMessage = String(message || "").trim();
+
+    if (!normalizedMessage) {
+      return NextResponse.json(
+        { error: "Message is required" },
+        { status: 400 },
+      );
+    }
+
+    const knowledgeBase = buildPortfolioKnowledgeBase();
+    const knowledgeBaseString = buildPortfolioKnowledgeBaseString();
+    const client = getOpenAIClient();
+    const response = await client.responses.create({
+      model: OPENAI_MODEL,
+      instructions: aiPrompts,
+      input: buildUserInput(
+        normalizedMessage,
+        history as ChatMessage[],
+        knowledgeBaseString,
+      ),
+    });
+
+    const aiResponse = response.output_text?.trim();
+
+    if (!aiResponse) {
+      return NextResponse.json(
+        { error: "OpenAI returned an empty response." },
+        { status: 502 },
+      );
+    }
+
+    return NextResponse.json({
+      message: ensureReferenceBlock(
+        aiResponse,
+        normalizedMessage,
+        knowledgeBase,
+      ),
+      sessionId: sessionId || `session-${Date.now()}`,
+    });
+  } catch (error) {
+    console.error("Chat API error:", error);
+
+    return NextResponse.json(
+      {
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    );
+  }
+}
