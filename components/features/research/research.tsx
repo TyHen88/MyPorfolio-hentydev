@@ -2,29 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Lightbulb } from 'lucide-react'
-
-const researchItems = [
-    {
-        title: "Edge-first Next.js Platforms",
-        description: "Experimenting with React Server Components, streaming UI, and cache strategies that keep global storefronts fast.",
-        progress: 75
-    },
-    {
-        title: "Observability for Polyglot APIs",
-        description: "Designing OpenTelemetry dashboards that unify Node, Spring Boot, and serverless functions under one SLO.",
-        progress: 60
-    },
-    {
-        title: "AI Copilots Inside Products",
-        description: "Prototyping retrieval-augmented workflows, guardrails, and human-in-the-loop review for production LLM features.",
-        progress: 55
-    },
-    {
-        title: "Event-Driven Architectures",
-        description: "Studying Kafka, Temporal, and outbox patterns to help full-stack teams scale beyond CRUD apps.",
-        progress: 50
-    },
-]
+import { researchSection } from '@/lib/portfolio-mock-data'
 
 export default function Research() {
     const [isVisible, setIsVisible] = useState(false)
@@ -50,11 +28,11 @@ export default function Research() {
                 <div ref={ref}>
                     <h2 className="text-3xl sm:text-5xl font-bold mb-12 flex items-center gap-3">
                         <span className="text-secondary">06.</span>
-                        <span>Research & Learning</span>
+                        <span>{researchSection.title}</span>
                     </h2>
 
                     <div className="grid md:grid-cols-2 gap-6">
-                        {researchItems.map((item, idx) => (
+                        {researchSection.items.map((item, idx) => (
                             <div
                                 key={idx}
                                 className={`bg-card border border-border rounded-lg p-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'

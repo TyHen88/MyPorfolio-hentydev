@@ -2,45 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Check } from 'lucide-react'
-
-const practices = [
-    {
-        category: "Code Quality",
-        items: [
-            "Model domains with TypeScript types that mirror API contracts",
-            "Document shared UI primitives inside a reusable component library",
-            "Automate unit, integration, and contract tests across the stack",
-            "Review pull requests with architectural context, not just syntax"
-        ]
-    },
-    {
-        category: "Performance",
-        items: [
-            "Measure Core Web Vitals and API latency with real telemetry",
-            "Lean on server components, streaming, and code splitting to reduce payloads",
-            "Apply layered caching (CDN, Redis, database) based on access patterns",
-            "Load test critical flows before toggling features on for customers"
-        ]
-    },
-    {
-        category: "Accessibility",
-        items: [
-            "Prefer semantic HTML and ARIA-first components",
-            "Pair automated axe checks with manual keyboard and screen reader passes",
-            "Design contrast and motion systems that respect user preferences",
-            "Document accessible patterns inside the design system"
-        ]
-    },
-    {
-        category: "Security",
-        items: [
-            "Enforce least-privilege IAM and rotated secrets in CI/CD",
-            "Validate every request with centralized schema validation",
-            "Adopt secure auth flows with token rotation and short-lived sessions",
-            "Continuously patch dependencies and monitor CVEs"
-        ]
-    },
-]
+import { bestPracticesSection } from '@/lib/portfolio-mock-data'
 
 export default function BestPractices() {
     const [isVisible, setIsVisible] = useState(false)
@@ -66,11 +28,11 @@ export default function BestPractices() {
                 <div ref={ref}>
                     <h2 className="text-3xl sm:text-5xl font-bold mb-12 flex items-center gap-3">
                         <span className="text-accent">07.</span>
-                        <span>Best Practices</span>
+                        <span>{bestPracticesSection.title}</span>
                     </h2>
 
                     <div className="grid md:grid-cols-2 gap-8">
-                        {practices.map((practice, idx) => (
+                        {bestPracticesSection.categories.map((practice, idx) => (
                             <div
                                 key={idx}
                                 className={`bg-card border border-border rounded-lg p-6 transition-all duration-700 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Mail, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { contactSection } from '@/lib/portfolio-mock-data'
 
 export default function Contact() {
     const [isVisible, setIsVisible] = useState(false)
@@ -32,10 +33,11 @@ export default function Contact() {
         setError('')
 
         const form = e.currentTarget
+        const formData = new FormData(form)
         const data = {
-            name: (form.name as HTMLInputElement).value,
-            email: (form.email as HTMLInputElement).value,
-            message: (form.message as HTMLTextAreaElement).value
+            name: String(formData.get('name') ?? ''),
+            email: String(formData.get('email') ?? ''),
+            message: String(formData.get('message') ?? '')
         }
 
         try {
@@ -48,13 +50,13 @@ export default function Contact() {
             const result = await res.json().catch(() => ({}))
 
             if (res.ok) {
-                setSuccess("Thanks for reaching out! I'll get back to you soon.")
+                setSuccess(contactSection.form.successMessage)
                 form.reset()
             } else {
-                setError(result?.error || 'Unable to send message. Please try again later.')
+                setError(result?.error || contactSection.form.fallbackErrorMessage)
             }
         } catch (err) {
-            setError('Something went wrong. Please try again.')
+            setError(contactSection.form.genericErrorMessage)
         } finally {
             setLoading(false)
         }
@@ -66,12 +68,11 @@ export default function Contact() {
                 <div ref={ref} className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                     <h2 className="text-3xl sm:text-5xl font-bold mb-4 flex items-center justify-center gap-3">
                         <span className="text-primary">08.</span>
-                        <span>Get In Touch</span>
+                        <span>{contactSection.title}</span>
                     </h2>
 
                     <p className="text-muted-foreground text-lg mb-12 max-w-xl mx-auto">
-                        Building a new product, modernizing a legacy system, or looking for a fractional full-stack partner?
-                        Let's chat about how I can help with architecture, delivery, and everything between design reviews and production support.
+                        {contactSection.description}
                     </p>
 
                     {/* Contact Form */}
@@ -79,19 +80,19 @@ export default function Contact() {
                         <input
                             type="text"
                             name="name"
-                            placeholder="Your name"
+                            placeholder={contactSection.form.namePlaceholder}
                             required
                             className="w-full px-4 py-3 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                         />
                         <input
                             type="email"
                             name="email"
-                            placeholder="Your email address"
+                            placeholder={contactSection.form.emailPlaceholder}
                             required
                             className="w-full px-4 py-3 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                         />
                         <textarea
-                            placeholder="Your message"
+                            placeholder={contactSection.form.messagePlaceholder}
                             name="message"
                             rows={5}
                             required
@@ -105,12 +106,12 @@ export default function Contact() {
                             {loading ? (
                                 <>
                                     <Loader2 className="animate-spin mr-2" size={18} />
-                                    Sending...
+                                    {contactSection.form.loadingLabel}
                                 </>
                             ) : (
                                 <>
                                     <Mail className="mr-2" size={18} />
-                                    Send Message
+                                    {contactSection.form.submitLabel}
                                 </>
                             )}
                         </Button>
@@ -130,40 +131,18 @@ export default function Contact() {
 
                     {/* Alternative Contact Methods */}
                     <div className="grid sm:grid-cols-4 gap-4 pt-8 border-t border-border">
-                        <a
-                            href="mailto:hentyn11@gmail.com"
-                            className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
-                        >
-                            <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">Email</div>
-                            <div className="text-sm text-muted-foreground">hentyn11@gmail.com — share context & specs</div>
-                        </a>
-                        <a
-                            href="https://www.linkedin.com/in/ty-hen-b7799b2a4?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
-                        >
-                            <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">LinkedIn</div>
-                            <div className="text-sm text-muted-foreground">Swap product ideas & opportunities</div>
-                        </a>
-                        <a
-                            href="https://github.com/TyHen88"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
-                        >
-                            <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">GitHub</div>
-                            <div className="text-sm text-muted-foreground">Browse active builds & experiments</div>
-                        </a>
-                        <a
-                            href="https://t.me/ahh_tiii"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
-                        >
-                            <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">Telegram</div>
-                            <div className="text-sm text-muted-foreground">Ping me for quick async syncs</div>
-                        </a>
+                        {contactSection.methods.map((method) => (
+                            <a
+                                key={method.label}
+                                href={method.href}
+                                target={method.href.startsWith('http') ? '_blank' : undefined}
+                                rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 transition-colors group"
+                            >
+                                <div className="text-primary font-semibold mb-1 group-hover:text-secondary transition-colors">{method.label}</div>
+                                <div className="text-sm text-muted-foreground">{method.description}</div>
+                            </a>
+                        ))}
                     </div>
                 </div>
             </div>

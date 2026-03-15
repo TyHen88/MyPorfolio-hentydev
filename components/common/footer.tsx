@@ -1,6 +1,7 @@
 'use client'
 
 import { Heart } from 'lucide-react'
+import { footerContent } from '@/lib/portfolio-mock-data'
 
 export default function Footer() {
     return (
@@ -9,27 +10,23 @@ export default function Footer() {
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                     {/* Left side */}
                     <div className="flex items-center gap-2 text-muted-foreground">
-                        <span>Designed & engineered by Hen Ty</span>
+                        <span>{footerContent.credit}</span>
                         <Heart size={16} className="text-primary fill-primary" />
                         {/* <span>with Next.js + Tailwind CSS</span> */}
                     </div>
 
                     {/* Social links */}
                     <div className="flex items-center gap-6">
-                        <a href="https://github.com/TyHen88" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                            GitHub
-                        </a>
-                        <a href="https://www.linkedin.com/in/ty-hen-b7799b2a4?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                            LinkedIn
-                        </a>
-                        <a href="https://t.me/ahh_tiii" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                            Telegram
-                        </a>
+                        {footerContent.socialLinks.map((link) => (
+                            <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                                {link.label}
+                            </a>
+                        ))}
                     </div>
 
                     {/* Copyright */}
                     <div className="text-sm text-muted-foreground">
-                        © 2025 All rights reserved.
+                        {footerContent.copyright}
                     </div>
                 </div>
             </div>

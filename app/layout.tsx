@@ -3,14 +3,14 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/common/theme-provider";
+import { siteMetadata } from "@/lib/portfolio-mock-data";
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Hen Ty's Portfolio | Full-Stack Developer",
-  description:
-    "Showcasing my projects, experience, and skills in web development.",
+  title: siteMetadata.title,
+  description: siteMetadata.description,
   icons: {
     icon: [
       { url: "/icon32x32.png", sizes: "32x32", type: "image/png" },

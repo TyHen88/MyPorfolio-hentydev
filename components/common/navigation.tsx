@@ -6,15 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-
-const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#experience", label: "Experience" },
-  { href: "#projects", label: "Projects" },
-  { href: "#blog", label: "Blog" },
-  { href: "#research", label: "Research" },
-  { href: "#contact", label: "Contact" },
-];
+import { navigationLinks, siteMetadata } from "@/lib/portfolio-mock-data";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,13 +27,13 @@ export default function Navigation() {
               className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center hover-scale"
             />
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Hen Ty's Portfolio
+              {siteMetadata.brandLabel}
             </span>
           </a>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {navigationLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -69,7 +61,7 @@ export default function Navigation() {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden pb-4 space-y-2 animate-fade-in-up">
-            {navLinks.map((link) => (
+            {navigationLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
